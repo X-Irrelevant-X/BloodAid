@@ -1,0 +1,14 @@
+Blood_Donation_Service/
+├── BDS/
+│   ├── templates/
+│       ── base.html
+│       ── index.html
+│   └── static/
+│       ── css/
+│       ── js/
+│       ── images/
+│   ├── DB.sqlite3
+│   ├── app.py
+│   ├── DB.py
+│   ├── urls.py
+│   └── views.py
