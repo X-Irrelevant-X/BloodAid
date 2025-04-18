@@ -7,8 +7,8 @@ Blood_Donation_Service/
 │       ── css/
 │       ── js/
 │       ── images/
-│   ├── DB.sqlite3
+│   ├── zDB.sqlite3
 │   ├── app.py
-│   ├── DB.py
+│   ├── models.py
 │   ├── urls.py
 │   └── views.py
