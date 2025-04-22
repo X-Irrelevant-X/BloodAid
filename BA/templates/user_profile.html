@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cupcake">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/user_profile.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@3.5.1/dist/full.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/ac5b348608.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header class="container mb-10">
+    <nav class='mx-auto mt-6'>
+      <div class="navbar bg-[#e36d53] flex justify-between rounded-full">
+        <a class="btn btn-ghost normal-case text-2xl" href="{{ url_for('user_home') }}">
+          <span class="text-red-800">BLOOD</span> AID
+        </a>
+        <ul class="menu menu-horizontal px-1 text-lg hidden lg:flex">
+          <li><a href="{{ url_for('user_home') }}">Home</a></li>
+          <li><a href="#">Our Team</a></li>
+          <li><a href="#">Blood Requests</a></li>
+          <li><a href="#">Donor List</a></li>
+          <li><a href="#">Campaigns</a></li>
+        </ul>
+        <div class="dropdown dropdown-end">
+          <label tabindex="0" class="btn"><i class="fa-solid fa-user text-2xl text-black"></i></label>
+          <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box w-52 mt-3 p-2 shadow z-[10]">
+            <li><a href="{{ url_for('user_profile') }}">Profile</a></li>
+            <li><a href="#">Report User</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container-xl px-4 mt-4">
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="section card mb-4 rounded-4">
+            <div class="acc fs-4 fw-bold text-center pt-1">Account</div>
+            <div class="card-body">
+              <p class="output-box"><strong>Username:</strong> {{ user['username'] }}</p>
+              <p class="output-box"><strong>Name:</strong> {{ user['name'] }}</p>
+              <p class="output-box"><strong>Gender:</strong> {{ user['gender'] }}</p>
+              <p class="output-box"><strong>Age:</strong> {{ user['age'] }}</p>
+              <p class="output-box"><strong>Police Station:</strong> {{ user['police_station'] }}</p>
+              <p class="output-box"><strong>City:</strong> {{ user['city'] }}</p>
+              <p class="output-box"><strong>Email:</strong> {{ user['email'] }}</p>
+              <p class="output-box"><strong>Contact:</strong> {{ user['contact'] }}</p>
+              <p class="output-box"><strong>Blood Group:</strong> {{ user['blood_group'] }}</p>
+              
+              <button class="btn bg-[#e36d53] text-white m-2"><a href="{{ url_for('change_password') }}">Change Password</a></button>
+              <button class="btn bg-red-400 text-white m-2"><a href="{{ url_for('delete_account') }}">Delete Account</a></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+
+</html>

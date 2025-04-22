@@ -1,6 +1,8 @@
 import sqlite3
+from werkzeug.security import *
 
 DB_PATH = 'zDB.sqlite3'
+
 
 def insert_user(data):
     conn = sqlite3.connect(DB_PATH)
@@ -65,3 +67,43 @@ def get_hospital_count():
     conn.close()
     return count
 
+
+def user_exists_by_contact(contact):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT contact FROM user_list WHERE contact = ?", (contact,))
+    result = cursor.fetchone()
+    conn.close()
+    return result is not None
+
+def submit_report(reported_by, contact, reason):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute(
+        "INSERT INTO report_box (reported_by, donor_contact, report_box) VALUES (?, ?, ?)",
+        (reported_by, contact, reason)
+    )
+    conn.commit()
+    conn.close()
+
+def get_user_password(username):
+    db = sqlite3.connect(DB_PATH)
+    cursor = db.cursor()
+    cursor.execute("SELECT pass FROM user_list WHERE username=?", (username,))
+    result = cursor.fetchone()
+    db.close()
+    return result[0] if result else None
+
+def update_user_password(username, new_password_hash):
+    db = sqlite3.connect(DB_PATH)
+    cursor = db.cursor()
+    cursor.execute("UPDATE user_list SET pass=? WHERE username=?", (new_password_hash, username))
+    db.commit()
+    db.close()
+
+def delete_user(username):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM user_list WHERE username = ?", (username,))
+    conn.commit()
+    conn.close()

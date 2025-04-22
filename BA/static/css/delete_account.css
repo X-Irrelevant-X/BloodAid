@@ -3,25 +3,23 @@ body {
   background-color: #e2e2e2;
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  /* Remove flex here */
   min-height: 100vh;
 }
 
+/* Let Tailwind handle layout centering */
 .container {
-  width: 50%;
-  /* Adjust as needed */
+  width: 100%;
+  max-width: 600px;
+  margin: 100px auto 0 auto; /* Centered and pushed down */
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px 30px;
   transition: .3s;
-
 }
 
 .container:hover {
-
   box-shadow: 6px 6px 15px rgb(255, 0, 0);
   transition: .3s;
 }
@@ -47,7 +45,6 @@ h2 {
 
 label {
   display: block;
-  /* width: 100px; */
   margin-bottom: 9px;
   font-weight: bold;
   font-size: 1.2em;
@@ -55,7 +52,6 @@ label {
 
 input[type="password"] {
   width: 100%;
-  /* Adjust as needed */
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -72,11 +68,32 @@ input[type="submit"] {
   font-size: 16px;
   cursor: pointer;
   margin-top: 10px;
-  width: 20%;
-  /* Adjust as needed */
+  width: 100%; /* Full width */
 }
 
 input[type="submit"]:hover {
   background-color: #a11000;
+}
 
+/* Back Button */
+.back-button-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-top: 30px;
+}
+
+.back-button {
+  background-color: #e36d53;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.back-button:hover {
+  background-color: #e36d53;
+  color: white;
 }

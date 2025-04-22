@@ -2,8 +2,7 @@ import sqlite3
 from flask import *
 from models import *
 from urls import *
-from werkzeug.security import generate_password_hash, check_password_hash
-
+from werkzeug.security import *
 
 def home():
     user_count = get_user_count()
@@ -110,3 +109,84 @@ def user_home():
                            hospital_count=hospital_count,
                            is_donor=is_donor)
 
+
+def user_profile():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
+    user = get_user_by_username(session['username'])
+
+    return render_template('user_profile.html', user=user)
+
+
+def report_user():
+    if request.method == 'POST':
+        contact = request.form['contact']
+        reason = request.form['reason']
+        reported_by = session.get('username')
+
+        if not user_exists_by_contact(contact):
+            flash("None of our users have this contact number.", "error")
+            return redirect(url_for('report_user'))
+
+        submit_report(reported_by, contact, reason)
+        flash("Report submitted successfully.", "success")
+        return redirect(url_for('user_web_view'))
+
+    return render_template('report_user.html')
+
+
+def change_password():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        username = session['username']
+        current_password = request.form['current_password']
+        new_password = request.form['new_password']
+        confirm_password = request.form['confirm_new_password']
+
+        if new_password != confirm_password:
+            flash("New passwords do not match!", "error")
+            return redirect(request.url)
+
+        user = get_user_by_username(username)
+        if user and check_password_hash(user['pass'], current_password):
+            new_hash = generate_password_hash(new_password)
+            update_user_password(username, new_hash)
+            flash("Password updated successfully!", "success")
+            return redirect(url_for('user_profile'))  # or profile/dashboard
+        else:
+            flash("Current password is incorrect!", "error")
+
+    return render_template('change_password.html')
+
+
+def delete_account():
+    # Check if the user is logged in
+    if 'username' not in session:
+        return redirect(url_for('login'))  # Redirect to login page if not logged in
+
+    if request.method == 'POST':
+        username = session['username']
+        password = request.form['password']
+        confirm = request.form['confirm_password']
+
+        if password != confirm:
+            flash("Passwords do not match!", "error")
+            return redirect(request.url)
+
+        # Retrieve user details from the database
+        user = get_user_by_username(username)
+
+        # Ensure the user exists and the provided password matches the stored hash
+        if user and check_password_hash(user['pass'], password):  # Access by column name
+            # Perform account deletion
+            delete_user(username)
+            session.clear()  # Clear session to log the user out
+            flash("Sorry to see you go. Account deleted.", "success")
+            return redirect(url_for('login'))  # Redirect to login after account deletion
+        else:
+            flash("Incorrect password!", "error")  # Show error if password is incorrect
+
+    return render_template('delete_account.html')
