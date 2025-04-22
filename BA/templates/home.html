@@ -53,11 +53,11 @@
                     <div class="modal" id="index">
                         <div class="modal-box flex flex-col justify-center items-center space-y-6">
                             <div class="form-control mt-6">
-                                <a href="#"><button class="btn btn-primary">Login</button></a>
+                                <a href="{{ url_for('login') }}"><button class="btn btn-primary">Login</button></a>
                             </div>
                             <h1>Don't have any account?</h1>
                             <div class="form-control">
-                                <a href="#"><button class="btn btn-primary">Register Now</button></a>
+                                <a href="{{ url_for('register') }}"><button class="btn btn-primary">Register Now</button></a>
                             </div>
                             <div class="form-control mt-6">
                                 <a href="#"><button class="btn btn-primary">Login as Admin</button></a>

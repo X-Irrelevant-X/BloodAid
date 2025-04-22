@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank > Register Now</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/ac5b348608.js" crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
+        .reg_form input, .reg_form select { height: 40px; }
+    </style>
+</head>
+<body>
+    <main class="flex flex-col space-y-6 justify-center items-center mt-9 mb-9">
+        <h1 class="text-5xl text-center font-extrabold"><span class="text-[#295a8b]">Register</span> Here!</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="text-{{ 'red' if category == 'danger' else 'green' }}-600 font-semibold">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <section class="registration flex items-center justify-evenly rounded-2xl pt-5 pb-5">
+            <div class="w-1/2"><img class="w-full" src="{{ url_for('static', filename='images/undraw_medicine_b1ol.png') }}" alt=""></div>
+            <div class="reg_form space-y-9 w-1/2 bg-[#91C8E4] p-4 rounded-xl mr-5">
+                <form method="POST">
+                    <div class="mb-4">
+                        <label><strong>Name:</strong></label><br>
+                        <input name="name" class="w-[300px] bg-transparent border-b-2" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label><strong>User Name:</strong></label><br>
+                        <input name="username" class="w-[300px] bg-transparent border-b-2" placeholder="Unique username" required>
+                        <p class="text-red-600">{{ errors.get('u') }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <label><strong>Contact:</strong></label><br>
+                        <input name="con" class="w-[300px] bg-transparent border-b-2" required>
+                        <p class="text-red-600">{{ errors.get('c') }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <label><strong>Age:</strong></label><br>
+                        <input name="age" class="w-[300px] bg-transparent border-b-2" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label><strong>Blood Group:</strong></label><br>
+                        <select name="blood_group" class="w-[100px] bg-transparent text-black" required>
+                            <option>A+</option><option>A-</option>
+                            <option>O+</option><option>O-</option>
+                            <option>B+</option><option>B-</option>
+                            <option>AB+</option><option>AB-</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label><strong>NID:</strong></label><br>
+                        <input name="nid" class="w-[300px] bg-transparent border-b-2" required>
+                        <p class="text-red-600">{{ errors.get('n') }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <label><strong>Police Station:</strong></label><br>
+                        <input name="police_station" class="w-[300px] bg-transparent border-b-2" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label><strong>City:</strong></label><br>
+                        <input name="city" class="w-[300px] bg-transparent border-b-2" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label><strong>Email:</strong></label><br>
+                        <input name="email" type="email" class="w-[300px] bg-transparent border-b-2" required>
+                        <p class="text-red-600">{{ errors.get('e') }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <label><strong>Password:</strong> (min 8 characters)</label><br>
+                        <input name="pass" type="password" class="w-[300px] bg-transparent border-b-2" value="123456789" required>
+                        <p class="text-red-600">{{ errors.get('p') }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <label><strong>Gender:</strong></label><br>
+                        <input name="gender" class="w-[300px] bg-transparent border-b-2" placeholder="Male/Female/Other" required>
+                    </div>
+
+                    <button class="bt text-white p-5 rounded-lg bg-blue-800 hover:bg-blue-900" name="register" type="submit">
+                        Register
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
