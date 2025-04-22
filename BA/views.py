@@ -3,6 +3,7 @@ from flask import *
 from models import *
 from urls import *
 from werkzeug.security import *
+from datetime import *
 
 def home():
     user_count = get_user_count()
@@ -163,9 +164,8 @@ def change_password():
 
 
 def delete_account():
-    # Check if the user is logged in
     if 'username' not in session:
-        return redirect(url_for('login'))  # Redirect to login page if not logged in
+        return redirect(url_for('login'))  
 
     if request.method == 'POST':
         username = session['username']
@@ -176,17 +176,76 @@ def delete_account():
             flash("Passwords do not match!", "error")
             return redirect(request.url)
 
-        # Retrieve user details from the database
         user = get_user_by_username(username)
 
-        # Ensure the user exists and the provided password matches the stored hash
-        if user and check_password_hash(user['pass'], password):  # Access by column name
+        if user and check_password_hash(user['pass'], password):  
             # Perform account deletion
             delete_user(username)
-            session.clear()  # Clear session to log the user out
+            session.clear() 
             flash("Sorry to see you go. Account deleted.", "success")
-            return redirect(url_for('login'))  # Redirect to login after account deletion
+            return redirect(url_for('login')) 
         else:
-            flash("Incorrect password!", "error")  # Show error if password is incorrect
+            flash("Incorrect password!", "error")  
 
     return render_template('delete_account.html')
+
+
+def trusted_hospitals():
+    hospitals = get_trusted_hospitals()
+    return render_template('trusted_hospitals.html', hospitals=hospitals)
+
+
+def donation_view():
+    if request.method == 'POST':
+        username = request.form['username']
+        has_suffered = request.form['hasSuffered']
+        has_disease = request.form['hasDisease']
+        is_smoker = request.form['isSmoker']
+        donation_date = request.form['donationDate']
+        approver_hospital = request.form['approverHospital']
+
+        if has_suffered == 'YES' or has_disease == 'YES' or is_smoker == 'YES':
+            flash('Denied due to medical history', 'error')
+            return redirect(url_for('donation_form'))
+
+        if not is_trusted_hospital(approver_hospital):
+            flash('Approval is not from a trusted hospital.', 'error')
+            return redirect(url_for('donation_form'))
+
+        if is_already_donor(username):
+            flash('You are already a donor.', 'info')
+            return redirect(url_for('user_home'))
+
+        add_donor(username, donation_date, approver_hospital)
+        flash('You have been added as a donor. Thank You', 'success')
+        return redirect(url_for('user_home'))
+
+    return render_template('donation_form.html')
+
+
+def request_blood():
+    if request.method == 'POST':
+        if 'username' in session:
+            loggedInUsername = session['username']
+        else:
+            return "User not logged in."
+
+        # Collect form data
+        name = request.form['name']
+        age = request.form['age']
+        blood_type = request.form['blood_type']
+        quantity = request.form['quantity']
+        unit = request.form['unit']
+        hospital = request.form['hospital']
+        date_needed = request.form['date_needed']
+        contact = request.form['contact']
+        reason = request.form['reason']
+
+        if not all([name, age, blood_type, quantity, unit, hospital, date_needed, contact, reason]):
+            return "<script>alert('All fields are required.\nPlease fill them up with correct information.')</script>"
+
+        insert_blood_request(loggedInUsername, name, age, blood_type, quantity, unit, hospital, date_needed, contact, reason)
+
+        return redirect(url_for('user_web_view'))
+
+    return render_template('request_blood.html')

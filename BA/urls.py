@@ -15,4 +15,9 @@ app.add_url_rule('/change_password', 'change_password', change_password, methods
 app.add_url_rule('/delete_account', 'delete_account', delete_account, methods=['GET', 'POST'])
 app.add_url_rule('/report_user', view_func=report_user, methods=['GET', 'POST'])
 
+app.add_url_rule('/donation', 'donation_form', donation_view, methods=['GET', 'POST'])
+app.add_url_rule('/trusted_hospitals', 'trusted_hospitals', trusted_hospitals)
+app.add_url_rule('/request_blood', 'request_blood', request_blood, methods=['GET', 'POST'])
+
+
 app.add_url_rule('/logout', view_func=logout, endpoint='logout')

@@ -68,11 +68,11 @@
         {% if is_donor %}
           You are a Donor
         {% else %}
-          <a href="#">Become a Donor</a>
+          <a href="{{ url_for('donation_form') }}">Become a Donor</a>
         {% endif %}
       </button>
       <button class="bg-[coral] p-5 rounded-3xl font-semibold" type="button">
-        <a href="#">Request For Blood</a>
+        <a href="{{ url_for('request_blood') }}">Request For Blood</a>
       </button>
     </section>
   </main>  

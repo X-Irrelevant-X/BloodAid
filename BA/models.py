@@ -107,3 +107,52 @@ def delete_user(username):
     cursor.execute("DELETE FROM user_list WHERE username = ?", (username,))
     conn.commit()
     conn.close()
+
+def get_trusted_hospitals():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM trusted_hospitals")
+    hospitals = cursor.fetchall()
+    conn.close()
+    return hospitals
+
+def is_trusted_hospital(hospital_name):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT hospital_name FROM trusted_hospitals WHERE hospital_name = ?", (hospital_name,))
+    result = cursor.fetchone()
+    conn.close()
+    return result is not None
+
+def is_already_donor(username):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM donor_list WHERE username = ?", (username,))
+    result = cursor.fetchone()
+    conn.close()
+    return result is not None
+
+def add_donor(username, donation_date, approver_hospital):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO donor_list (username, previous_donation, approver_hospital) VALUES (?, ?, ?)",
+                   (username, donation_date, approver_hospital))
+    conn.commit()
+    conn.close()
+    
+
+def insert_blood_request(request_by, name, age, blood_group, quantity, hospital_unit, hospital_name, date_needed, contact, reason):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute('''INSERT INTO blood_requests 
+                      (request_by, name, age, blood_group, quantity, hospital_unit, hospital_name, date_needed, contact, reason) 
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
+                   (request_by, name, age, blood_group, quantity, hospital_unit, hospital_name, date_needed, contact, reason))
+    conn.commit()
+    conn.close()
+
+def get_all_blood_requests():
+    conn = sqlite3.connect(DB_PATH)
+    requests = conn.execute('SELECT * FROM blood_requests').fetchall()
+    conn.close()
+    return requests

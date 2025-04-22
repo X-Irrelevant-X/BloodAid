@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Donation Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/donation_form.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="donation_head">
+            <img src="{{ url_for('static', filename='images/formbanner.jpg') }}" alt="">
+            <div class="donation_head_info">
+                <h1 class="blood">Blood Donation Form</h1>
+                <p>Confidential - Please answer the following questions correctly. This will help to protect you and the patient who receives your blood.</p>
+            </div>
+        </div>
+        <form action="{{ url_for('donation_form') }}" method="post">
+            <div>
+                <label for="hasSuffered">Did you suffer any problem at the time of your previous donation?</label>
+                <div style="display: flex; gap:10px">
+                    <label for="d1">Yes</label>
+                    <input type="radio" name="hasSuffered" id="d1" value="YES">
+                    <label for="d2">No</label>
+                    <input type="radio" name="hasSuffered" id="d2" value="NO">
+                </div>
+            </div>
+
+            <div>
+                <label for="hasDisease">Do you have any disease? (cancer, tuberculosis, leprosy, hepatitis B or C, or HIV)</label>
+                <div style="display: flex; gap:10px">
+                    <label for="c1">Yes</label>
+                    <input type="radio" name="hasDisease" id="c1" value="YES">
+                    <label for="c2">No</label>
+                    <input type="radio" name="hasDisease" id="c2" value="NO">
+                </div>
+            </div>
+
+            <div>
+                <label for="isSmoker">Are you a chainsmoker?</label>
+                <div style="display: flex; gap:10px">
+                    <label for="b1">Yes</label>
+                    <input type="radio" name="isSmoker" id="b1" value="YES">
+                    <label for="b2">No</label>
+                    <input type="radio" name="isSmoker" id="b2" value="NO">
+                </div>
+            </div>
+
+            <div>
+                <label for="donationDate">Previous donation Date:</label>
+                <input type="date" id="donationDate" name="donationDate">
+            </div>
+
+            <div>
+                <label for="approverHospital">Approver Hospital (Hospital that issued your clinical clearance):</label>
+                <input type="text" id="approverHospital" name="approverHospital" required>
+            </div>
+
+            <input type="submit" value="Submit form">
+
+            <p class="approval"><a href="{{ url_for('trusted_hospitals') }}">Don't have approval? Or not from a Trusted hospital? (Click here)</a></p>
+        </form>
+    </div>
+</body>
+
+</html>

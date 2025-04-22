@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Blood</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/request_blood.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h2><span>Request</span> For Blood</h2>
+        <form method="post" action="{{ url_for('request_blood') }}">
+            <div class="name_age">
+                <div class="name">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name">
+                </div>
+                <div class="age">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" min="1"><br>
+                </div>
+            </div>
+            <div class="bloodtype_hu_Q">
+                <div class="blood-type">
+                    <label for="blood_type">Blood Type:</label>
+                    <select id="blood_type" name="blood_type">
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                    </select><br>
+                </div>
+                <div class="quantity">
+                    <label for="quantity">Quantity (Bags):</label>
+                    <input type="number" id="quantity" name="quantity" min="1">
+                </div>
+                <div class="hu">
+                    <label for="unit">Hospital Unit:</label>
+                    <input type="text" id="unit" name="unit">
+                </div>
+            </div>
+            <label for="hospital">Hospital Name:</label>
+            <input type="text" id="hospital" name="hospital"><br>
+            <div class="needed_contact">
+                <div class="need">
+                    <label for="date_needed">Needed:</label>
+                    <input type="date" id="date_needed" name="date_needed">
+                </div>
+                <div class="contact">
+                    <label for="contact">Contact:</label>
+                    <input type="text" id="contact" name="contact"><br>
+                </div>
+            </div>
+            <label for="reason">Reason:</label>
+            <textarea id="reason" name="reason" rows="4" cols="50"></textarea><br><br>
+            <input type="submit" value="Request For Blood">
+        </form>
+    </div>
+</body>
+
+</html>
