@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cupcake">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BloodAid | A Life Aiding Platform</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@3.5.1/dist/full.css" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/ac5b348608.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header class="h-auto">
+    <nav class="container mx-auto mt-6">
+      <div class="navbar bg-[#e36d53] flex justify-between rounded-full">
+        <a class="btn btn-ghost normal-case text-2xl">
+          <span class="text-red-800">BLOOD</span> AID
+        </a>
+        <ul class="menu menu-horizontal px-1 text-lg hidden lg:flex">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Our Team</a></li>
+          <li><a href="#">Blood Requests</a></li>
+          <li><a href="#">Donor List</a></li>
+          <li><a href="#">Campaigns</a></li>
+        </ul>
+        <div class="dropdown dropdown-end z-50 relative">
+          <label tabindex="0" class="btn"><i class="fa-solid fa-user text-2xl text-black"></i></label>
+          <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box w-52 mt-3 p-2 shadow z-50">
+          
+            <li><a href="#">Profile</a></li>
+            <li><a href="#">Report User</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <section class="container mx-auto mt-10 flex justify-between items-center">
+      <div class="text-info text-black w-1/2 space-y-6">
+        <h1 class="text-3xl font-thin">Let your Blood save lives</h1>
+        <h1 class="text-5xl font-bold">Let Our Service Make<br />Your Life Better</h1>
+        <div class="flex justify-between w-[500px]">
+          <div class="use">
+            <h1 class="text-4xl">{{ user_count }}</h1>
+            <p class="text-lg">Users</p>
+          </div>
+          <div class="use">
+            <h1 class="text-4xl">{{ donor_count }}</h1>
+            <p class="text-lg">Donors</p>
+          </div>
+          <div class="use">
+            <h1 class="text-4xl">{{ hospital_count }}</h1>
+            <p class="text-lg">Trusted Hospitals</p>
+          </div>
+        </div>
+      </div>
+      <div class="header_banner w-1/2">
+        <img class="w-full mix-blend-multiply" src="{{ url_for('static', filename='images/5266696.jpg') }}" alt="">
+      </div>
+    </section>
+  </header>
+
+  <main class="flex flex-col justify-center items-center mt-9 mb-[80px]">
+    <section class="donate text-center space-x-10">
+      <button class="bg-[coral] p-5 rounded-3xl font-semibold" type="button">
+        {% if is_donor %}
+          You are a Donor
+        {% else %}
+          <a href="#">Become a Donor</a>
+        {% endif %}
+      </button>
+      <button class="bg-[coral] p-5 rounded-3xl font-semibold" type="button">
+        <a href="#">Request For Blood</a>
+      </button>
+    </section>
+  </main>  
+</body>
+
+</html>

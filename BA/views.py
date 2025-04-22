@@ -1,8 +1,8 @@
-from flask import *
 import sqlite3
+from flask import *
 from models import *
+from urls import *
 from werkzeug.security import generate_password_hash, check_password_hash
-
 
 
 def home():
@@ -77,8 +77,36 @@ def login():
         if user and check_password_hash(user['pass'], password):
             session.clear()
             session['username'] = username
-            return redirect('/user_web_view')
+            return redirect('/userhome')
         else:
             error = "Invalid username or password"
 
     return render_template('login.html', error=error)
+
+
+def logout():
+    session.clear()
+    return redirect(url_for('home'))
+
+
+def user_home():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    username = session['username']
+    
+    # Get counts from the existing functions in models.py
+    user_count = get_user_count()
+    donor_count = get_donor_count()
+    hospital_count = get_hospital_count()
+
+    # Check if the user is a donor
+    user = get_user_by_username(username)
+    is_donor = bool(user) and 'donor_list' in user  # assuming there's a donor_list in user, adapt this
+
+    return render_template('user_home.html',
+                           user_count=user_count,
+                           donor_count=donor_count,
+                           hospital_count=hospital_count,
+                           is_donor=is_donor)
+
