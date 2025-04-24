@@ -74,7 +74,7 @@ def login():
         password = request.form['password']
         user = get_user_by_username(username)
 
-        if user and check_password_hash(user['pass'], password):
+        if user and check_password_hash(user['password'], password):
             session.clear()
             session['username'] = username
             return redirect('/userhome')

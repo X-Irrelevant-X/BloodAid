@@ -1,23 +1,34 @@
 import sqlite3
 from werkzeug.security import *
+from encryption import *
 
 DB_PATH = 'zDB.sqlite3'
 
 
 def insert_user(data):
     conn = sqlite3.connect(DB_PATH)
-    query = '''
-        INSERT INTO user_list 
-        (username, name, contact, email, pass, age, blood_group, NID, gender, police_station, city)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    '''
-    conn.execute(query, (
-        data['username'], data['name'], data['contact'], data['email'],
-        data['password'], data['age'], data['blood_group'], data['nid'],
-        data['gender'], data['police_station'], data['city']
-    ))
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "INSERT INTO user_list (username, name, contact, email, pass, age, blood_group, NID, gender, police_station, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        (
+            data['username'],
+            encrypt_data(data['name']),
+            encrypt_data(data['contact']),
+            encrypt_data(data['email']),
+            data['password'],  # already hashed
+            encrypt_data(data['age']),
+            encrypt_data(data['blood_group']),
+            encrypt_data(data['nid']),
+            encrypt_data(data['gender']),
+            encrypt_data(data['police_station']),
+            encrypt_data(data['city'])
+        )
+    )
+
     conn.commit()
     conn.close()
+
 
 def check_duplicate_fields(username, email, nid, contact):
     conn = sqlite3.connect(DB_PATH)
@@ -45,8 +56,22 @@ def get_user_by_username(username):
     cursor.execute("SELECT * FROM user_list WHERE username = ?", (username,))
     user = cursor.fetchone()
 
+    user_data = {
+        'username': user[0],
+        'name': decrypt_data(user[1]),
+        'contact': decrypt_data(user[2]),
+        'email': decrypt_data(user[3]),
+        'password': user[4],  # hashed, no need to decrypt
+        'age': decrypt_data(user[5]),
+        'blood_group': decrypt_data(user[6]),
+        'nid': decrypt_data(user[7]),
+        'gender': decrypt_data(user[8]),
+        'police_station': decrypt_data(user[9]),
+        'city': decrypt_data(user[10])
+    }
+
     conn.close()
-    return user
+    return user_data
 
 
 def get_user_count():
