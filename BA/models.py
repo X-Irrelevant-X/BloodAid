@@ -156,3 +156,17 @@ def get_all_blood_requests():
     requests = conn.execute('SELECT * FROM blood_requests').fetchall()
     conn.close()
     return requests
+
+def get_donor_list():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    query = """
+        SELECT u.name, u.age, u.blood_group, u.contact, u.police_station, u.city
+        FROM donor_list d
+        INNER JOIN user_list u ON d.username = u.username
+    """
+    cursor.execute(query)
+    donors = cursor.fetchall()
+    conn.close()
+    return donors

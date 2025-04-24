@@ -16,6 +16,7 @@ app.add_url_rule('/delete_account', 'delete_account', delete_account, methods=['
 app.add_url_rule('/report_user', view_func=report_user, methods=['GET', 'POST'])
 
 app.add_url_rule('/donation', 'donation_form', donation_view, methods=['GET', 'POST'])
+app.add_url_rule('/donor_list', 'donor_list', donor_list)
 app.add_url_rule('/trusted_hospitals', 'trusted_hospitals', trusted_hospitals)
 app.add_url_rule('/request_blood', 'request_blood', request_blood, methods=['GET', 'POST'])
 

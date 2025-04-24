@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Donor List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/donor_list.css') }}">
+    <script src="https://kit.fontawesome.com/ac5b348608.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <section class="sec">
+        <section class="dash">
+            <div class="dashboard">
+                <div class="blood">
+                    <h6 class="dt">Blood Group</h6>
+                    <select class="options" id="bloodGroup" name="blood">
+                        <option value="All">All</option>
+                        <option value="A+">A+</option>
+                        <option value="B+">B+</option>
+                        <option value="O+">O+</option>
+                        <option value="AB+">AB+</option>
+                        <option value="A-">A-</option>
+                        <option value="B-">B-</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O-">O-</option>
+                    </select>
+                </div>
+
+                <div class="police_station">
+                    <h6 class="dt">Police Station</h6>
+                    <input class="police_station" id="policeStation" name="police_station" type="text">
+                </div>
+
+                <div class="city">
+                    <h6 class="dt">City</h6>
+                    <input class="city" id="city" name="city" type="text">
+                </div>
+
+                <button class="app" onclick="applyFilters()">Apply Filters</button>
+                <a onclick="history.back();"><i class="fas fa-chevron-left"></i></a>
+            </div>
+        </section>
+
+        <section class="List">
+            <h1><span>Donor </span>List</h1>
+            <div class="tbl-header">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Blood Group</th>
+                            <th>Contact</th>
+                            <th>Police Station</th>
+                            <th>City</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tbl-content">
+                <table>
+                    <tbody>
+                        {% for donor in donors %}
+                        <tr class="data-row">
+                            <td>{{ donor[0] }}</td>
+                            <td>{{ donor[1] }}</td>
+                            <td>{{ donor[2] }}</td>
+                            <td>{{ donor[3] }}</td>
+                            <td>{{ donor[4] }}</td>
+                            <td>{{ donor[5] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </section>
+
+    <script>
+        function applyFilters() {
+            var bloodGroup = document.getElementById("bloodGroup").value;
+            var city = document.getElementById("city").value;
+            var policeStation = document.getElementById("policeStation").value;
+
+            var rows = document.querySelectorAll(".tbl-content tbody tr");
+
+            rows.forEach(function (row) {
+                var bloodCell = row.querySelector("td:nth-child(3)").textContent;
+                var cityCell = row.querySelector("td:nth-child(6)").textContent;
+                var policeStationCell = row.querySelector("td:nth-child(5)").textContent;
+
+                if ((bloodGroup === "All" || bloodCell === bloodGroup) &&
+                    (city === "" || cityCell.toLowerCase().includes(city.toLowerCase())) &&
+                    (policeStation === "" || policeStationCell.toLowerCase().includes(policeStation.toLowerCase()))) {
+                    row.style.display = "table-row";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

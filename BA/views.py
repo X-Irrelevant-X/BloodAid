@@ -249,3 +249,8 @@ def request_blood():
         return redirect(url_for('user_web_view'))
 
     return render_template('request_blood.html')
+
+
+def donor_list():
+    donors = get_donor_list()
+    return render_template("donor_list.html", donors=donors)
