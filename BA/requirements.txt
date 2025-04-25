@@ -1,6 +1,4 @@
 Flask
-Flask-Cors
-gunicorn
 blinker
 click
 cryptography

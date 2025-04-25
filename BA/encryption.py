@@ -7,7 +7,7 @@ ENV_FILE = ".env"
 
 if not os.path.exists(ENV_FILE):
     with open(ENV_FILE, "w") as f:
-        f.write("# Environment configuration\n")
+        f.write("#Generated Fernet KEY:\n")
 
 
 load_dotenv()
@@ -37,4 +37,5 @@ def decrypt_data(data):
     try:
         return fernet.decrypt(data.encode()).decode()
     except:
+        data = None
         return data

@@ -73,15 +73,32 @@ def login():
         password = request.form['password']
 
         user = get_user_by_username(username)
+        print(user)
 
         if not user or not check_password_hash(user['password'], password):
-            error = "Invalid username or password"
+            error = "Invalid username or password."
+            return render_template('login.html', error=error)
+
+
+        if any(val is None for val in [
+            user['name'],
+            user['contact'],
+            user['email'],
+            user['age'],
+            user['blood_group'],
+            user['nid'],
+            user['gender'],
+            user['police_station'],
+            user['city']
+        ]):
+            error = "Decryption failed. Unauthorized Access."
             return render_template('login.html', error=error)
 
         session['username'] = user['username']
         return redirect(url_for('user_home'))
 
     return render_template('login.html')
+
 
 
 def logout():
