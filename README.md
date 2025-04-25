@@ -7,7 +7,7 @@ New Encrytion features have been implemented using cryptography.fernet and werkz
 # Be Aware
 For New Users: Since the encryption key used for this version is randomly generated, it will not allow you to log in with previous credentials. You should create a new account and use those new credentials to log in. All other fields (like donors and blood requests) will show None until new data is added.
 
-#Installation guide:
+# Installation guide:
 
 1. Clone the Repo and Unzip the Repo.
 2. Create python environment inside the project folder.
