@@ -3,74 +3,42 @@ from encryption import encrypt_data
 
 DB_PATH = 'zDB.sqlite3'
 
-def migrate_user_data_to_encrypted():
+def migrate_donor_data_to_encrypted():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    # Fetch all users
-    cursor.execute("SELECT username, name, contact, email, pass, age, blood_group, NID, gender, police_station, city FROM user_list")
-    users = cursor.fetchall()
+    # Fetch all donors
+    cursor.execute("SELECT rowid, previous_donation, approver_hospital FROM donor_list")
+    donors = cursor.fetchall()
 
-    for user in users:
-        username, name, contact, email, password, age, blood_group, nid, gender, police_station, city = user
-
-        # Check if fields are already encrypted by trying to decrypt them
+    print(f"Found {len(donors)} donors to migrate.")
+    for donor in donors:
+        rowid, previous_donation, approver_hospital = donor
+        print(f"{rowid}, {previous_donation}, {approver_hospital}")
+        # Skip if already encrypted (simple heuristic: if short, probably not encrypted)
         try:
-            # Attempt to decrypt a field, if it succeeds, it's already encrypted
-            decrypted_name = decrypt_data(name)
-            decrypted_contact = decrypt_data(contact)
-            decrypted_email = decrypt_data(email)
-            decrypted_age = decrypt_data(age)
-            decrypted_blood_group = decrypt_data(blood_group)
-            decrypted_nid = decrypt_data(nid)
-            decrypted_gender = decrypt_data(gender)
-            decrypted_police_station = decrypt_data(police_station)
-            decrypted_city = decrypt_data(city)
+            if previous_donation and len(previous_donation) < 50:
+                encrypted_donation = encrypt_data(previous_donation)
+                encrypted_approver = encrypt_data(approver_hospital) if approver_hospital else None
+                
+                print(f"Encrypting {encrypted_donation}")
+                print(f"Encrypting {encrypted_approver}")
+                
+                cursor.execute("""
+                    UPDATE donor_list SET 
+                        previous_donation = ?, 
+                        approver_hospital = ?
+                    WHERE rowid = ?
+                """, (encrypted_donation, encrypted_approver, rowid))
 
-            # Skip already encrypted user
-            continue  # Skip to the next user if decryption succeeds
-        except:
-            pass  # Continue if any decryption fails, which means the data is not encrypted yet
-
-        # Encrypt fields
-        encrypted_name = encrypt_data(name)
-        encrypted_contact = encrypt_data(contact)
-        encrypted_email = encrypt_data(email)
-        encrypted_age = encrypt_data(age)
-        encrypted_blood_group = encrypt_data(blood_group)
-        encrypted_nid = encrypt_data(nid)
-        encrypted_gender = encrypt_data(gender)
-        encrypted_police_station = encrypt_data(police_station)
-        encrypted_city = encrypt_data(city)
-
-        # Update user record with encrypted values
-        cursor.execute("""
-            UPDATE user_list SET 
-                name = ?, 
-                contact = ?, 
-                email = ?, 
-                age = ?, 
-                blood_group = ?, 
-                NID = ?, 
-                gender = ?, 
-                police_station = ?, 
-                city = ?
-            WHERE username = ?
-        """, (
-            encrypted_name, encrypted_contact, encrypted_email,
-            encrypted_age, encrypted_blood_group, encrypted_nid,
-            encrypted_gender, encrypted_police_station, encrypted_city,
-            username
-        ))
-
-        print(f"Encrypting user: {username}")
+                print(f"Encrypting donor entry: rowid {rowid}")
+        except Exception as e:
+            print(f"Skipping rowid {rowid} due to error: {e}")
+            continue
 
     conn.commit()
     conn.close()
-    print("Migration complete. All unencrypted users are now encrypted.")
+    print("Migration complete. All unencrypted donor entries are now encrypted.")
 
-
-    
-    
-migrate_user_data_to_encrypted()
-
+# Run the migration
+migrate_donor_data_to_encrypted()

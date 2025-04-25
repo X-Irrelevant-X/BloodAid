@@ -95,14 +95,12 @@ def user_home():
 
     username = session['username']
     
-    # Get counts from the existing functions in models.py
     user_count = get_user_count()
     donor_count = get_donor_count()
     hospital_count = get_hospital_count()
 
-    # Check if the user is a donor
     user = get_user_by_username(username)
-    is_donor = bool(user) and 'donor_list' in user  # assuming there's a donor_list in user, adapt this
+    is_donor = bool(user) and 'donor_list' in user
 
     return render_template('user_home.html',
                            user_count=user_count,
@@ -156,7 +154,7 @@ def change_password():
             new_hash = generate_password_hash(new_password)
             update_user_password(username, new_hash)
             flash("Password updated successfully!", "success")
-            return redirect(url_for('user_profile'))  # or profile/dashboard
+            return redirect(url_for('user_profile')) 
         else:
             flash("Current password is incorrect!", "error")
 
@@ -179,7 +177,6 @@ def delete_account():
         user = get_user_by_username(username)
 
         if user and check_password_hash(user['pass'], password):  
-            # Perform account deletion
             delete_user(username)
             session.clear() 
             flash("Sorry to see you go. Account deleted.", "success")
@@ -197,7 +194,9 @@ def trusted_hospitals():
 
 def donation_view():
     if request.method == 'POST':
-        username = request.form['username']
+        username = session.get('username')
+        if not username:
+            return redirect(url_for('login')) 
         has_suffered = request.form['hasSuffered']
         has_disease = request.form['hasDisease']
         is_smoker = request.form['isSmoker']

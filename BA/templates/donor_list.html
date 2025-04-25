@@ -63,15 +63,15 @@
                     <tbody>
                         {% for donor in donors %}
                         <tr class="data-row">
-                            <td>{{ donor[0] }}</td>
-                            <td>{{ donor[1] }}</td>
-                            <td>{{ donor[2] }}</td>
-                            <td>{{ donor[3] }}</td>
-                            <td>{{ donor[4] }}</td>
-                            <td>{{ donor[5] }}</td>
+                            <td>{{ donor.name }}</td>
+                            <td>{{ donor.age }}</td>
+                            <td>{{ donor.blood_group }}</td>
+                            <td>{{ donor.contact }}</td>
+                            <td>{{ donor.police_station }}</td>
+                            <td>{{ donor.city }}</td>
                         </tr>
                         {% endfor %}
-                    </tbody>
+                    </tbody>                    
                 </table>
             </div>
         </section>

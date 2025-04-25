@@ -194,11 +194,15 @@ def is_already_donor(username):
 def add_donor(username, donation_date, approver_hospital):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
+    
+    encrypted_donation_date = encrypt_data(donation_date)
+    encrypted_approver_hospital = encrypt_data(approver_hospital)
+
     cursor.execute("INSERT INTO donor_list (username, previous_donation, approver_hospital) VALUES (?, ?, ?)",
-                   (username, donation_date, approver_hospital))
+                   (username, encrypted_donation_date, encrypted_approver_hospital))
     conn.commit()
     conn.close()
-    
+
 
 def insert_blood_request(request_by, name, age, blood_group, quantity, hospital_unit, hospital_name, date_needed, contact, reason):
     conn = sqlite3.connect(DB_PATH)
@@ -216,7 +220,11 @@ def get_all_blood_requests():
     conn.close()
     return requests
 
+
 def get_donor_list():
+    import sqlite3
+    from encryption import decrypt_data
+
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
@@ -228,4 +236,23 @@ def get_donor_list():
     cursor.execute(query)
     donors = cursor.fetchall()
     conn.close()
-    return donors
+
+    decrypted_donors = []
+    for donor in donors:
+        try:
+            decrypted_donor = {
+                'name': decrypt_data(donor[0]),
+                'age': decrypt_data(donor[1]),
+                'blood_group': decrypt_data(donor[2]),
+                'contact': decrypt_data(donor[3]),
+                'police_station': decrypt_data(donor[4]),
+                'city': decrypt_data(donor[5]),
+            }
+            decrypted_donors.append(decrypted_donor)
+        except Exception as e:
+            print(f"Skipping donor due to decryption error: {e}")
+            continue
+    
+    print(decrypted_donors)
+    return decrypted_donors
+
