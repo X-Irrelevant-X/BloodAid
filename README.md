@@ -1,17 +1,41 @@
 # BloodAid
- Blood Aid is a Rework my old Blood Donation Service Project rebuilt in Flask and Sqlite. Like the original project, users can view their profiles, post for blood donations with details, Users can also view Donor list and sort through it by blood group and area. There is also a campaigns feature where users can view ongoing Blood donation campaigns and see its details.  
+Blood Aid is a rework of my old Blood Donation Service Project rebuilt in Flask and SQLite. Like the original project, users can view their profiles, post for blood donations with details, and view a donor list, sorted by blood group and area. There is also a campaigns feature where users can view ongoing blood donation campaigns and see its details.
 
+New Features:
 
+    Encryption: All sensitive user data (including personal information) is encrypted while being stored. When data is displayed or accessed, it is decrypted.
+
+    Password Security: Passwords are hashed and salted before being stored in the database, ensuring that even in case of a breach, the passwords remain secure.
+
+    Key Management: A key management system has been implemented where a key for encryption is dynamically generated and stored in the .env file. This key is necessary for encrypting/decrypting sensitive data.
+
+    Integrity Check: Integrity checks using Message Authentication Codes (MACs) ensure that data has not been tampered with during transmission.
+
+TL;DR:
+
+For New Users: Since the encryption key used for this version is randomly generated, it will not allow you to log in with previous credentials. You should create a new account and use those new credentials to log in. All other fields (like donors and blood requests) will show None until new data is added.
 Installation guide:
-1. Clone the Repo and Unzip the Repo.
-2. Create python environment inside the project folder.
-    - open the terminal of IDE like VSCodoium or VSCode
-    - python -m venv env
-3. Activate the environment.
-    - env\scripts\activate 
-4. Move into the BA folder.
-    - cd BA
-5. Install the requirements.txt file.
-    - pip install -r requirements.txt
-6. Launch the project by running the app.py file
-    - python app.py
+
+    Clone the Repo and unzip the contents.
+
+    Create a Python environment inside the project folder:
+
+        Open the terminal of your IDE (e.g., VSCode or any other preferred terminal).
+
+        Run: python -m venv env
+
+    Activate the environment:
+
+        Run: env\scripts\activate (Windows) or source env/bin/activate (Mac/Linux).
+
+    Move into the BA folder:
+
+        Run: cd BA
+
+    Install the required dependencies:
+
+        Run: pip install -r requirements.txt
+
+    Launch the project by running the app.py file:
+
+        Run: python app.py
