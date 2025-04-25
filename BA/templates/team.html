@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Section</title>
+
+    <!-- Font Awesome for GitHub Icon -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ourteam.css') }}">
+</head>
+
+<body class="flex justify-center items-center flex-col min-h-screen bg-gray-100">
+    <div class="box rounded-3xl">
+        <h2 class="text-6xl mt-7 text-white font-mono font-bold text-center">
+            <span class="text-[coral]">MEET</span> OUR TEAM
+        </h2>
+
+        <div class="main flex flex-wrap w-[90vw] mx-auto justify-center items-center h-[60vh] gap-[10px]">
+            {% for member in team %}
+            <div class="profile-card duration-[.6s] w-[220px] h-[220px] bg-white rounded-[50%] font-sans p-[30px] shadow-lg">
+                <div class="img w-full duration-[.6s] relative z-[99] h-full">
+                    <img class="shadow-lg w-full duration-[.6s] rounded-full" src="{{ url_for('static', filename='images/' + member.image) }}">
+                </div>
+                <div class="caption opacity-0 translate-y-[-90px] text-center duration-[.6s]">
+                    <h3 class="text-xl">{{ member.name }}</h3>
+                    <p class="text-base">{{ member.role }}</p>
+                    <a href="{{ member.github }}" target="_blank" class="text-blue-600 hover:underline text-sm">
+                        <i class="fab mr-1"></i> GitHub
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="w-full flex justify-center mt-8">
+        <a onclick="history.back();" class="text-white bg-coral-500 hover:bg-coral-600 px-4 py-2 rounded-full text-lg shadow-md">
+            <i class="fas fa-arrow-left mr-2"></i>
+        </a>
+    </div>    
+</body>
+</html>

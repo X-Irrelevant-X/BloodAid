@@ -20,6 +20,7 @@ app.add_url_rule('/donor_list', 'donor_list', donor_list)
 app.add_url_rule('/trusted_hospitals', 'trusted_hospitals', trusted_hospitals)
 app.add_url_rule('/request_blood', 'request_blood', request_blood, methods=['GET', 'POST'])
 app.add_url_rule('/blood_requests', 'blood_requests', blood_requests)
-
+app.add_url_rule('/campaigns', 'campaigns',view_func=campaigns_view)
+app.add_url_rule('/team', 'team', view_func=team_page)
 
 app.add_url_rule('/logout', view_func=logout, endpoint='logout')

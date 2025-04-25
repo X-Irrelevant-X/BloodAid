@@ -1,6 +1,7 @@
 import sqlite3
 from werkzeug.security import *
 from encryption import *
+from datetime import *
 
 DB_PATH = 'zDB.sqlite3'
 
@@ -290,3 +291,26 @@ def get_all_blood_requests():
         decrypted_requests.append(decrypted)
     
     return decrypted_requests
+
+
+def get_campaigns():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    current_date = datetime.now().strftime("%Y-%m-%d")
+    query = '''
+        SELECT c.venue, c.start_date, c.end_date, h.location
+        FROM campaigns c
+        JOIN trusted_hospitals h ON c.venue = h.hospital_name
+        WHERE c.end_date >= ?
+    '''
+    cursor.execute(query, (current_date,))
+    campaigns = cursor.fetchall()
+    conn.close()
+    
+    return [{
+        'venue': row[0],
+        'start_date': row[1],
+        'end_date': row[2],
+        'location': row[3]
+    } for row in campaigns]

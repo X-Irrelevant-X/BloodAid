@@ -20,10 +20,10 @@
         </a>
         <ul class="menu menu-horizontal px-1 text-lg hidden lg:flex">
           <li><a href="{{ url_for('user_home') }}">Home</a></li>
-          <li><a href="#">Our Team</a></li>
+          <li><a href="{{ url_for('team') }}">Our Team</a></li>
           <li><a href="{{ url_for('blood_requests') }}">Blood Requests</a></li>
           <li><a href="{{ url_for('donor_list') }}">Donor List</a></li>
-          <li><a href="#">Campaigns</a></li>
+          <li><a href="{{ url_for('campaigns') }}">Campaigns</a></li>
         </ul>
         <div class="dropdown dropdown-end">
           <label tabindex="0" class="btn"><i class="fa-solid fa-user text-2xl text-black"></i></label>

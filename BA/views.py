@@ -259,3 +259,42 @@ def blood_requests():
     return render_template('bloodrequests_list.html', requests=requests_data)
 
 
+def campaigns_view():
+    campaigns = get_campaigns()
+    return render_template('campaigns.html', campaigns=campaigns)
+
+
+def team_page():
+    team_members = [
+        {
+            'name': 'Jannatul Ferdous',
+            'role': 'Worked with Frontend',
+            'image': 'nawrin.jpg',
+            'github': 'https://github.com/'
+        },
+        {
+            'name': 'Md Samsul Arefin',
+            'role': 'Worked with Frontend',
+            'image': 'samsul.jpg',
+            'github': 'https://github.com/Crosshairs532'
+        },
+        {
+            'name': 'Fardous Nayeem',
+            'role': 'Worked with Backend',
+            'image': 'nayeem.jpg',
+            'github': 'https://github.com/X-Irrelevant-X'
+        },
+        {
+            'name': 'Monowarul Islam',
+            'role': 'Worked with Backend',
+            'image': 'monowarul.jpg',
+            'github': 'https://github.com/ShrabanMI'
+        },
+        {
+            'name': 'Naser-Al-Noman',
+            'role': 'Worked with Database',
+            'image': 'naser.jpg',
+            'github': 'https://github.com/Naser-Al-Noman'
+        },
+    ]
+    return render_template('team.html', team=team_members)
