@@ -132,7 +132,7 @@ def report_user():
 
         submit_report(reported_by, contact, reason)
         flash("Report submitted successfully.", "success")
-        return redirect(url_for('user_web_view'))
+        return redirect('/userhome')
 
     return render_template('report_user.html')
 

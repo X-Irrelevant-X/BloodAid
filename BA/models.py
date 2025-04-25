@@ -16,7 +16,7 @@ def insert_user(data):
             encrypt_data(data['name']),
             encrypt_data(data['contact']),
             encrypt_data(data['email']),
-            data['password'],  # already hashed
+            data['password'],  
             encrypt_data(data['age']),
             encrypt_data(data['blood_group']),
             encrypt_data(data['nid']),
@@ -61,7 +61,7 @@ def get_user_by_username(username):
         'name': decrypt_data(user[1]),
         'contact': decrypt_data(user[2]),
         'email': decrypt_data(user[3]),
-        'password': user[4],  # hashed, no need to decrypt
+        'password': user[4],
         'age': decrypt_data(user[5]),
         'blood_group': decrypt_data(user[6]),
         'nid': decrypt_data(user[7]),
@@ -96,20 +96,54 @@ def get_hospital_count():
 def user_exists_by_contact(contact):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("SELECT contact FROM user_list WHERE contact = ?", (contact,))
-    result = cursor.fetchone()
+    cursor.execute("SELECT contact FROM user_list")
+    all_contacts = cursor.fetchall()
     conn.close()
-    return result is not None
+
+    for (stored_contact,) in all_contacts:
+        try:
+            decrypted = decrypt_data(stored_contact)
+        except:
+            decrypted = stored_contact
+
+        if decrypted == contact:
+            return True
+    return False
+
+
 
 def submit_report(reported_by, contact, reason):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
+    encrypted_contact = encrypt_data(contact)
+    encrypted_reason = encrypt_data(reason)
     cursor.execute(
         "INSERT INTO report_box (reported_by, donor_contact, report_box) VALUES (?, ?, ?)",
-        (reported_by, contact, reason)
+        (reported_by, encrypted_contact, encrypted_reason)
     )
     conn.commit()
     conn.close()
+
+
+def get_all_reports():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM report_box")
+    reports = cursor.fetchall()
+    conn.close()
+
+    decrypted_reports = []
+    for report in reports:
+        decrypted_reports.append({
+            'reported_by': decrypt_data(report['reported_by']),
+            'donor_contact': decrypt_data(report['donor_contact']),
+            'report_box': decrypt_data(report['report_box'])
+        })
+
+    return decrypted_reports
+
 
 def get_user_password(username):
     db = sqlite3.connect(DB_PATH)
