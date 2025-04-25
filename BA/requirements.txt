@@ -4,3 +4,4 @@ gunicorn
 blinker
 click
 cryptography
+python-dotenv

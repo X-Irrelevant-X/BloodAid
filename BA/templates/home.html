@@ -41,7 +41,7 @@
                 <div class="nav-m hidden lg:visible lg:flex">
                     <ul class="menu menu-horizontal px-1 text-lg">
                         <li><a href="{{ url_for('home') }}">Home</a></li>
-                        <li><a href="#">Our Team</a></li>
+                        <li><a href="{{ url_for('team') }}">Our Team</a></li>
                     </ul>
                 </div>
                 <div class="lg:visible nav_e login">
@@ -58,9 +58,6 @@
                             <h1>Don't have any account?</h1>
                             <div class="form-control">
                                 <a href="{{ url_for('register') }}"><button class="btn btn-primary">Register Now</button></a>
-                            </div>
-                            <div class="form-control mt-6">
-                                <a href="#"><button class="btn btn-primary">Login as Admin</button></a>
                             </div>
                         </div>
                         <label class="modal-backdrop" for="my_modal_7">Close</label>
