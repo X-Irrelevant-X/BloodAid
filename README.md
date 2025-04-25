@@ -1,15 +1,7 @@
 # BloodAid
 Blood Aid is a rework of my old Blood Donation Service Project rebuilt in Flask and SQLite. Like the original project, users can view their profiles, post for blood donations with details, and view a donor list, sorted by blood group and area. There is also a campaigns feature where users can view ongoing blood donation campaigns and see its details.
 
-New Encrytion features were also added. Such as:
-
-Encryption: All sensitive user data (including personal information) is encrypted while being stored. When data is displayed or accessed, it is decrypted.
-
-Password Security: Passwords are hashed and salted before being stored in the database, ensuring that even in case of a breach, the passwords remain secure.
-
-Key Management: A key management system has been implemented where a key for encryption is dynamically generated and stored in the .env file. This key is necessary for encrypting/decrypting sensitive data.
-
-Integrity Check: Integrity checks using Message Authentication Codes (MACs) ensure that data has not been tampered with during transmission.
+New Encrytion features have been implemented using cryptography.fernet and werkzeug.security. Sensitive data, including user information, is encrypted while being stored and decrypted when displayed. Passwords are securely hashed and salted before being stored in the database. A key management system is also in place, where a dynamic encryption key is generated and stored in a .env file for handling encryption and decryption. To ensure data integrity, integrity checks are performed to prevent tampering.
 
 
 #Be Aware
