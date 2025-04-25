@@ -4,7 +4,7 @@ Blood Aid is a rework of my old Blood Donation Service Project rebuilt in Flask 
 New Encrytion features have been implemented using cryptography.fernet and werkzeug.security. Sensitive data, including user information, is encrypted while being stored and decrypted when displayed. Passwords are securely hashed and salted before being stored in the database. A key management system is also in place, where a dynamic encryption key is generated and stored in a .env file for handling encryption and decryption. To ensure data integrity, integrity checks are performed to prevent tampering.
 
 
-#Be Aware
+# Be Aware
 For New Users: Since the encryption key used for this version is randomly generated, it will not allow you to log in with previous credentials. You should create a new account and use those new credentials to log in. All other fields (like donors and blood requests) will show None until new data is added.
 
 #Installation guide:
