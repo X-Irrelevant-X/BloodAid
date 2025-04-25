@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Requests</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/requests_list.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+    <h1 class="title">Current Blood Requests</h1>
+
+    <div class="cards-container">
+        {% for request in requests %}
+        <div class="request-card">
+            <div class="card-header">
+                <h2>{{ request.name }} <span class="blood-group">{{ request.blood_group }}</span></h2>
+                <p class="needed-date">Needed by: {{ request.date_needed }}</p>
+            </div>
+            <div class="card-body">
+                <p><strong>Quantity:</strong> {{ request.quantity }} unit(s)</p>
+                <p><strong>Hospital:</strong> {{ request.hospital_name }}</p>
+                <p><strong>Unit:</strong> {{ request.hospital_unit }}</p>
+                <p><strong>Contact:</strong> {{ request.contact }}</p>
+            
+                <div class="reason-section">
+                    <h3>Reason</h3>
+                    <div class="reason-box">{{ request.reason }}</div>
+                </div>
+            </div>            
+            <div class="card-footer">
+                <span class="location">{{ request.location }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <a onclick="history.back();" class="back-btn">
+        <i class="fa-solid fa-circle-chevron-left"></i> Back
+    </a>
+
+</body>
+</html>

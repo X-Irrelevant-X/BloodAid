@@ -204,23 +204,6 @@ def add_donor(username, donation_date, approver_hospital):
     conn.close()
 
 
-def insert_blood_request(request_by, name, age, blood_group, quantity, hospital_unit, hospital_name, date_needed, contact, reason):
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute('''INSERT INTO blood_requests 
-                      (request_by, name, age, blood_group, quantity, hospital_unit, hospital_name, date_needed, contact, reason) 
-                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
-                   (request_by, name, age, blood_group, quantity, hospital_unit, hospital_name, date_needed, contact, reason))
-    conn.commit()
-    conn.close()
-
-def get_all_blood_requests():
-    conn = sqlite3.connect(DB_PATH)
-    requests = conn.execute('SELECT * FROM blood_requests').fetchall()
-    conn.close()
-    return requests
-
-
 def get_donor_list():
     import sqlite3
     from encryption import decrypt_data
@@ -253,6 +236,57 @@ def get_donor_list():
             print(f"Skipping donor due to decryption error: {e}")
             continue
     
-    print(decrypted_donors)
     return decrypted_donors
 
+
+def insert_blood_request(request_by, name, age, blood_group, quantity, hospital_unit, hospital_name, date_needed, contact, reason):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    
+    # Encrypt sensitive fields
+    name_enc = encrypt_data(name)
+    age_enc = encrypt_data(age)
+    blood_group_enc = encrypt_data(blood_group)
+    quantity_enc = encrypt_data(quantity)
+    hospital_unit_enc = encrypt_data(hospital_unit)
+    hospital_name_enc = encrypt_data(hospital_name)
+    date_needed_enc = encrypt_data(date_needed)
+    contact_enc = encrypt_data(contact)
+    reason_enc = encrypt_data(reason)
+
+    cursor.execute('''INSERT INTO blood_requests 
+                      (request_by, name, age, blood_group, quantity, hospital_unit, hospital_name, date_needed, contact, reason) 
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
+                   (request_by, name_enc, age_enc, blood_group_enc, quantity_enc,
+                    hospital_unit_enc, hospital_name_enc, date_needed_enc,
+                    contact_enc, reason_enc))
+    
+    conn.commit()
+    conn.close()
+
+
+def get_all_blood_requests():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    rows = cursor.execute('SELECT * FROM blood_requests').fetchall()
+    conn.close()
+
+    decrypted_requests = []
+    for blood in rows:
+        decrypted = {
+            'id': blood[0],
+            'request_by': blood[1],
+            'name': decrypt_data(blood[2]),
+            'age': decrypt_data(blood[3]),
+            'blood_group': decrypt_data(blood[4]),
+            'quantity': decrypt_data(blood[5]),
+            'hospital_unit': decrypt_data(blood[6]),
+            'hospital_name': decrypt_data(blood[7]),
+            'date_needed': decrypt_data(blood[8]),
+            'contact': decrypt_data(blood[9]),
+            'reason': decrypt_data(blood[10]),
+            'location': "Contact for Location"
+        }
+        decrypted_requests.append(decrypted)
+    
+    return decrypted_requests

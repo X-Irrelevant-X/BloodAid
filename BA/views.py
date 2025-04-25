@@ -222,6 +222,11 @@ def donation_view():
     return render_template('donation_form.html')
 
 
+def donor_list():
+    donors = get_donor_list()
+    return render_template("donor_list.html", donors=donors)
+
+
 def request_blood():
     if request.method == 'POST':
         if 'username' in session:
@@ -245,11 +250,12 @@ def request_blood():
 
         insert_blood_request(loggedInUsername, name, age, blood_type, quantity, unit, hospital, date_needed, contact, reason)
 
-        return redirect(url_for('user_web_view'))
+        return redirect(url_for('user_home'))
 
     return render_template('request_blood.html')
 
+def blood_requests():
+    requests_data = get_all_blood_requests()
+    return render_template('bloodrequests_list.html', requests=requests_data)
 
-def donor_list():
-    donors = get_donor_list()
-    return render_template("donor_list.html", donors=donors)
+
