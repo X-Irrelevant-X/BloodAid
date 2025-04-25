@@ -49,15 +49,41 @@ def check_duplicate_fields(username, email, nid, contact):
     return errors
 
 
+# def get_user_by_username(username):
+#     conn = sqlite3.connect(DB_PATH)
+#     conn.row_factory = sqlite3.Row
+#     cursor = conn.cursor()
+
+#     cursor.execute("SELECT * FROM user_list WHERE username = ?", (username,))
+#     user = cursor.fetchone()
+
+#     user_data = {
+#         'username': user[0],
+#         'name': decrypt_data(user[1]),
+#         'contact': decrypt_data(user[2]),
+#         'email': decrypt_data(user[3]),
+#         'password': user[4],
+#         'age': decrypt_data(user[5]),
+#         'blood_group': decrypt_data(user[6]),
+#         'nid': decrypt_data(user[7]),
+#         'gender': decrypt_data(user[8]),
+#         'police_station': decrypt_data(user[9]),
+#         'city': decrypt_data(user[10])
+#     }
+
+#     conn.close()
+#     return user_data
+
 def get_user_by_username(username):
     conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
+    user = cursor.execute('SELECT * FROM user_list WHERE username = ?', (username,)).fetchone()
+    conn.close()
 
-    cursor.execute("SELECT * FROM user_list WHERE username = ?", (username,))
-    user = cursor.fetchone()
+    if not user:
+        return None
 
-    user_data = {
+    return {
         'username': user[0],
         'name': decrypt_data(user[1]),
         'contact': decrypt_data(user[2]),
@@ -68,11 +94,8 @@ def get_user_by_username(username):
         'nid': decrypt_data(user[7]),
         'gender': decrypt_data(user[8]),
         'police_station': decrypt_data(user[9]),
-        'city': decrypt_data(user[10])
+        'city': decrypt_data(user[10]),
     }
-
-    conn.close()
-    return user_data
 
 
 def get_user_count():
@@ -244,7 +267,6 @@ def insert_blood_request(request_by, name, age, blood_group, quantity, hospital_
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
-    # Encrypt sensitive fields
     name_enc = encrypt_data(name)
     age_enc = encrypt_data(age)
     blood_group_enc = encrypt_data(blood_group)

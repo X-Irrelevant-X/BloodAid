@@ -68,20 +68,20 @@ def register():
 
 def login():
     error = None
-
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+
         user = get_user_by_username(username)
 
-        if user and check_password_hash(user['password'], password):
-            session.clear()
-            session['username'] = username
-            return redirect('/userhome')
-        else:
+        if not user or not check_password_hash(user['password'], password):
             error = "Invalid username or password"
+            return render_template('login.html', error=error)
 
-    return render_template('login.html', error=error)
+        session['username'] = user['username']
+        return redirect(url_for('user_home'))
+
+    return render_template('login.html')
 
 
 def logout():
