@@ -21,22 +21,11 @@ def migrate_admin_data_to_encrypted():
         # Encrypt admin name and email
         encrypted_name = encrypt_data(admin_name)
         encrypted_email = encrypt_data(admin_email)
+        hashed_password = generate_password_hash(password)
 
-        print(f"Encrypted Name: {encrypted_name}\n Encrypted Email: {encrypted_email}")
+        print(f"Encrypted Name: {encrypted_name}\n Encrypted Email: {encrypted_email}\n Hashed Password: {hashed_password}")
 
-        # Check if password is already hashed
-        if password.startswith('pbkdf2:sha256:'):
-            # Password is already hashed with pbkdf2:sha256, no rehashing needed
-            hashed_password = password
-            print(f"Password for {admin_name} is already hashed with pbkdf2:sha256.")
-        elif password.startswith('scrypt:'):
-            # Password is hashed with scrypt, need to rehash using pbkdf2:sha256
-            hashed_password = generate_password_hash(password.split('$')[-1])  # Extract raw password part and hash again
-            print(f"Password for {admin_name} was scrypt-hashed. Rehashing to pbkdf2:sha256.")
-        else:
-            # If it's not a recognized hash format, hash it with pbkdf2:sha256
-            hashed_password = generate_password_hash(password)
-            print(f"Password for {admin_name} was plain text. Hashing now with pbkdf2:sha256.")
+    
 
         # Update the admin record with the encrypted name, email, and hashed password
         cursor.execute("""
