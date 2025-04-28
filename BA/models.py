@@ -76,20 +76,20 @@ def get_admin_by_username(username):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    cursor.execute("SELECT admin_name, admin_email, pass FROM admin WHERE admin_name = ?", (username,))
-    admin = cursor.fetchone()
+    cursor.execute("SELECT admin_name, admin_email, pass FROM admin")
+    admins = cursor.fetchall()
 
-    if admin:
+    for admin in admins:
         admin_name, admin_email, password = admin
-        admin_name = decrypt_data(admin_name)
-        admin_email = decrypt_data(admin_email)
+        decrypted_admin_name = decrypt_data(admin_name)
 
-        print(admin_name, admin_email)
-        return {
-            'admin_name': admin_name,
-            'admin_email': admin_email,
-            'pass': password
-        }
+        if decrypted_admin_name == username:
+            admin_email = decrypt_data(admin_email)
+            return {
+                'admin_name': decrypted_admin_name,
+                'admin_email': admin_email,
+                'pass': password
+            }
 
     conn.close()
     return None

@@ -103,12 +103,11 @@ def login():
                 error = "Invalid username or password."
                 return render_template('login.html', error=error)
 
-            # Set session for admin login
             session['username'] = admin['admin_name']
             return redirect(url_for('admin_view'))
 
         else:
-            error = "No such user or admin exists."
+            error = "No such User exists."
             return render_template('login.html', error=error)
 
     return render_template('login.html')
