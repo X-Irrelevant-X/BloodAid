@@ -8,6 +8,7 @@ app.add_url_rule('/', view_func=home, endpoint='home')
 
 app.add_url_rule('/register', view_func=register, methods=['GET', 'POST'])
 app.add_url_rule('/login', view_func=login, methods=['GET', 'POST'])
+app.add_url_rule('/logout', view_func=logout, endpoint='logout')
 app.add_url_rule('/userhome', view_func=user_home, endpoint='user_home')
 app.add_url_rule('/user_profile', view_func=user_profile)
 
@@ -23,4 +24,7 @@ app.add_url_rule('/blood_requests', 'blood_requests', blood_requests)
 app.add_url_rule('/campaigns', 'campaigns',view_func=campaigns_view)
 app.add_url_rule('/team', 'team', view_func=team_page)
 
-app.add_url_rule('/logout', view_func=logout, endpoint='logout')
+#Admin Routes
+app.add_url_rule('/admin_view', 'admin_view', view_func=admin_view)
+
+
