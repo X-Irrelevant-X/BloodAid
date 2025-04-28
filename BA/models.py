@@ -233,7 +233,7 @@ def get_donor_list():
     cursor = conn.cursor()
 
     query = """
-        SELECT u.name, u.age, u.blood_group, u.contact, u.police_station, u.city
+        SELECT u.username, u.name, u.age, u.blood_group, u.contact, u.police_station, u.city
         FROM donor_list d
         INNER JOIN user_list u ON d.username = u.username
     """
@@ -245,12 +245,13 @@ def get_donor_list():
     for donor in donors:
         try:
             decrypted_donor = {
-                'name': decrypt_data(donor[0]),
-                'age': decrypt_data(donor[1]),
-                'blood_group': decrypt_data(donor[2]),
-                'contact': decrypt_data(donor[3]),
-                'police_station': decrypt_data(donor[4]),
-                'city': decrypt_data(donor[5]),
+                'username': donor[0],
+                'name': decrypt_data(donor[1]),
+                'age': decrypt_data(donor[2]),
+                'blood_group': decrypt_data(donor[3]),
+                'contact': decrypt_data(donor[4]),
+                'police_station': decrypt_data(donor[5]),
+                'city': decrypt_data(donor[6]),
             }
             decrypted_donors.append(decrypted_donor)
         except Exception as e:
@@ -259,7 +260,14 @@ def get_donor_list():
     
     return decrypted_donors
 
+def delete_donor(username):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
 
+    cursor.execute("DELETE FROM donor_list WHERE username = ?", (username,))
+    conn.commit()
+    conn.close()
+    
 def insert_blood_request(request_by, name, age, blood_group, quantity, hospital_unit, hospital_name, date_needed, contact, reason):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()

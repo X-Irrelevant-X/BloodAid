@@ -3,9 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Admin View Donors</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_view.css') }}">
+    <script>
+        function confirmDelete(username) {
+            if (confirm("Are you sure to remove this donor from the list?")) {
+                var form = document.createElement('form');
+                form.method = 'POST';
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'username';
+                input.value = username;
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
 </head>
 <body>
-    <h1>Welcome to Admin Panel</h1>
+    <div id="page_wrapper">
+        <div id="sidenav" class="sidenav">
+            <div class="logo_section">
+                <h3>BLOOD DONATION</br>SERVICES</h3>
+            </div>
+            
+            <div class="sidenav_header">
+                <a href="{{ url_for('admin_view') }}" class="active_color">
+                    <div class="sidenav_link active">
+                        <h3>DONOR LIST</h3>
+                    </div>
+                </a>
+                <a href="#">
+                    <div class="sidenav_link">
+                        <h3>USER LIST</h3>
+                    </div>
+                </a>
+                <a href="#">
+                    <div class="sidenav_link">
+                        <h3>REQUEST LIST</h3>
+                    </div>
+                </a>
+                <a href="#">
+                    <div class="sidenav_link">
+                        <h3>TRUSTED HOSPITALS</h3>
+                    </div>
+                </a>
+                <a href="#">
+                    <div class="sidenav_link">
+                        <h3>CAMPAIGN LIST</h3>
+                    </div>
+                </a>
+                <a href="#">
+                    <div class="sidenav_link">
+                        <h3>REPORT BOX</h3>
+                    </div>
+                </a>
+            </div>
+            
+            <button type="button" onclick="window.location.href='{{ url_for('logout') }}'">Log Out</button>
+        </div>
+
+        <main>
+            <header>
+                <div class="text">
+                    <h2 class="head_tran"><span>DONOR LIST</span></h2>
+                    <p class="head_head">ALL DONORS HERE</p>
+                </div>
+            </header>
+            <section class="List">
+                <div class="tbl-header">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Blood Group</th>
+                                <th>Contact</th>
+                                <th>Police Station</th>
+                                <th>City</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="tbl-content">
+                    <table>
+                        <tbody>
+                            {% for donor in donors %}
+                                <tr>
+                                    <td>{{ donor.username }}</td>
+                                    <td>{{ donor.name }}</td>
+                                    <td>{{ donor.age }}</td>
+                                    <td>{{ donor.blood_group }}</td>
+                                    <td>{{ donor.contact }}</td>
+                                    <td>{{ donor.police_station }}</td>
+                                    <td>{{ donor.city }}</td>
+                                    <td>
+                                        <input class='delete' type='button' value='Delete' onclick="confirmDelete('{{ donor.username }}')">
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
 </body>
 </html>

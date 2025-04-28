@@ -25,6 +25,6 @@ app.add_url_rule('/campaigns', 'campaigns',view_func=campaigns_view)
 app.add_url_rule('/team', 'team', view_func=team_page)
 
 #Admin Routes
-app.add_url_rule('/admin_view', 'admin_view', view_func=admin_view)
+app.add_url_rule('/admin/view', 'admin_view', view_func=admin_view, methods=['GET', 'POST'])
 
 

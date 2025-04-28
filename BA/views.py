@@ -331,4 +331,10 @@ def team_page():
 
 #Admin Functions
 def admin_view():
-    return render_template('admin_view.html')
+    if request.method == 'POST':
+        username = request.form.get('username')
+        delete_donor(username)
+        return redirect(url_for('admin_view')) 
+
+    donors = get_donor_list()
+    return render_template('admin_view.html', donors=donors)
