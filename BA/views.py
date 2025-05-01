@@ -143,8 +143,9 @@ def user_profile():
         return redirect(url_for('login'))
     
     user = get_user_by_username(session['username'])
+    is_donor = is_user_donor(session['username'])
 
-    return render_template('user_profile.html', user=user)
+    return render_template('user_profile.html', user=user, is_donor=is_donor)
 
 
 def report_user():

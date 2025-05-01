@@ -226,6 +226,14 @@ def add_donor(username, donation_date, approver_hospital):
     conn.commit()
     conn.close()
 
+def remove_donor(username):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM donor_list WHERE username = ?", (username,))
+    conn.commit()
+    conn.close()
+
 
 def get_donor_list():
     import sqlite3
