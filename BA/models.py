@@ -181,12 +181,14 @@ def update_user_password(username, new_password_hash):
     db.commit()
     db.close()
 
+
 def delete_user(username):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("DELETE FROM user_list WHERE username = ?", (username,))
     conn.commit()
     conn.close()
+
 
 def get_trusted_hospitals():
     conn = sqlite3.connect(DB_PATH)
@@ -341,3 +343,15 @@ def get_campaigns():
         'end_date': row[2],
         'location': row[3]
     } for row in campaigns]
+
+
+def is_user_donor(username):
+    import sqlite3
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT 1 FROM donor_list WHERE username = ?", (username,))
+    result = cursor.fetchone()
+
+    conn.close()
+    return result is not None
