@@ -23,46 +23,8 @@
 </head>
 <body>
     <div id="page_wrapper">
-        <div id="sidenav" class="sidenav">
-            <div class="logo_section">
-                <h3>BLOOD DONATION</br>SERVICES</h3>
-            </div>
-            
-            <div class="sidenav_header">
-                <a href="{{ url_for('admin_view') }}">
-                    <div class="sidenav_link active" class="active_color">
-                        <h3>USER LIST</h3>
-                    </div>
-                </a>
-                <a href="{{ url_for('admin_donors') }}">
-                    <div class="sidenav_link">
-                        <h3>DONOR LIST</h3>
-                    </div>
-                </a>
-                <a href="#">
-                    <div class="sidenav_link">
-                        <h3>REPORT BOX</h3>
-                    </div>
-                </a>
-                <a href="#">
-                    <div class="sidenav_link">
-                        <h3>REQUEST LIST</h3>
-                    </div>
-                </a>
-                <a href="#">
-                    <div class="sidenav_link">
-                        <h3>CAMPAIGN LIST</h3>
-                    </div>
-                </a>
-                <a href="#">
-                    <div class="sidenav_link">
-                        <h3>TRUSTED HOSPITALS</h3>
-                    </div>
-                </a>
-            </div>
-            
-            <button type="button" onclick="window.location.href='{{ url_for('logout') }}'">Log Out</button>
-        </div>
+        {% include 'admin_navbar.html' %}
+
 
         <main>
             <header>
