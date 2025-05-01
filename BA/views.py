@@ -251,6 +251,14 @@ def donation_view():
 
     return render_template('donation_form.html')
 
+def remove_donor_view():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    username = session['username']
+    remove_donor(username)
+    flash('You have been removed from the donor list.', 'info')
+    return redirect(url_for('user_profile'))
 
 def donor_list():
     donors = get_donor_list()

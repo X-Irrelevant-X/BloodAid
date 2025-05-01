@@ -12,6 +12,7 @@ app.add_url_rule('/logout', view_func=logout, endpoint='logout')
 app.add_url_rule('/userhome', view_func=user_home, endpoint='user_home')
 app.add_url_rule('/user_profile', view_func=user_profile)
 
+app.add_url_rule('/remove_donor', 'remove_donor_view', remove_donor_view, methods=['POST'])
 app.add_url_rule('/change_password', 'change_password', change_password, methods=['GET', 'POST'])
 app.add_url_rule('/delete_account', 'delete_account', delete_account, methods=['GET', 'POST'])
 app.add_url_rule('/report_user', view_func=report_user, methods=['GET', 'POST'])

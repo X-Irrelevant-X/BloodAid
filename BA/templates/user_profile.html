@@ -55,11 +55,11 @@
               <p class="output-box"><strong>Blood Group:</strong> {{ user['blood_group'] }}</p>
               
               {% if is_donor %}
-              <label for="removeDonorModal" class="btn bg-[#e36d53] text-white m-2 text-center">
+              <label for="removeDonorModal" class="btn bg-red-400 text-white m-2 text-center">
                 You are a Donor
               </label>
               {% else %}
-              <a href="{{ url_for('donation_form') }}" class="btn bg-[#e36d53] text-white m-2 text-center">
+              <a href="{{ url_for('donation_form') }}" class="btn bg-red-400 text-white m-2 text-center">
                 Become a Donor
               </a>
               {% endif %}
@@ -71,7 +71,7 @@
                   <h2 class="text-xl font-semibold mb-4">Remove Donor Status?</h2>
                   <p class="mb-4">Are you sure you want to remove your donor status?</p>
                   <div class="flex justify-between">
-                    <form method="POST" action="#">
+                    <form method="POST" action="{{ url_for('remove_donor_view') }}">
                       <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Yes, Remove</button>
                     </form>
                     <label for="removeDonorModal" class="bg-gray-300 px-4 py-2 rounded cursor-pointer">Cancel</label>
