@@ -25,12 +25,13 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Username</th>
-                                <th>Age</th>
-                                <th>Blood Group</th>
-                                <th>Contact</th>
-                                <th>Police Station</th>
-                                <th>City</th>
+                                <th class="text-center">Donor Username</th>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Age</th>
+                                <th class="text-center">Blood Group</th>
+                                <th class="text-center">Contact</th>
+                                <th class="text-center">Police Station</th>
+                                <th class="text-center">City</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -41,14 +42,14 @@
                         <tbody>
                             {% for donor in donors %}
                                 <tr>
-                                    <td>{{ donor.username }}</td>
-                                    <td>{{ donor.age }}</td>
-                                    <td>{{ donor.blood_group }}</td>
-                                    <td>{{ donor.contact }}</td>
-                                    <td>{{ donor.police_station }}</td>
-                                    <td>{{ donor.city }}</td>
-                                    <td>
-                                        <!-- Label to open modal -->
+                                    <td class="text-center">{{ donor.username }}</td>
+                                    <td class="text-center">{{ donor.name }}</td>
+                                    <td class="text-center">{{ donor.age }}</td>
+                                    <td class="text-center">{{ donor.blood_group }}</td>
+                                    <td class="text-center">{{ donor.contact }}</td>
+                                    <td class="text-center">{{ donor.police_station }}</td>
+                                    <td class="text-center">{{ donor.city }}</td>
+                                    <td class="text-center">
                                         <label for="modal_{{ donor.username }}" class="delete bg-red-500 text-white px-3 py-1 rounded cursor-pointer">
                                             Delete
                                         </label>

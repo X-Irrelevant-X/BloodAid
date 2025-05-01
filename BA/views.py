@@ -340,13 +340,14 @@ def team_page():
 
 #Admin Functions
 def admin_view():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        delete_donor(username)
-        return redirect(url_for('admin_view')) 
+    users = get_user_list()
+    return render_template('admin_view.html', users=users)
 
-    donors = get_donor_list()
-    return render_template('admin_view.html', donors=donors)
+def delete_user_view():
+    username = request.form.get('username')
+    if username:
+        delete_user(username)
+    return redirect(url_for('admin_view'))
 
 def admin_view_donors():
     donors = get_donor_list()

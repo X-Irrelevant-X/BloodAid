@@ -31,6 +31,38 @@ def insert_user(data):
     conn.close()
 
 
+def get_user_list():
+
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    query = """
+        SELECT username, name, age, blood_group, contact, police_station, city
+        FROM user_list
+    """
+    cursor.execute(query)
+    users = cursor.fetchall()
+    conn.close()
+
+    decrypted_users = []
+    for user in users:
+        try:
+            decrypted_user = {
+                'username': user[0],
+                'name': decrypt_data(user[1]),
+                'age': decrypt_data(user[2]),
+                'blood_group': decrypt_data(user[3]),
+                'contact': decrypt_data(user[4]),
+                'police_station': decrypt_data(user[5]),
+                'city': decrypt_data(user[6]),
+            }
+            decrypted_users.append(decrypted_user)
+        except Exception as e:
+            continue
+
+    return decrypted_users
+
+
 def check_duplicate_fields(username, email, nid, contact):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -236,9 +268,6 @@ def remove_donor(username):
 
 
 def get_donor_list():
-    import sqlite3
-    from encryption import decrypt_data
-
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 

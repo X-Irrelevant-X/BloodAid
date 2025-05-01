@@ -1,52 +1,44 @@
-
-<div id="sidenav" class="sidenav">
-    <div class="logo_section">
-        <h3>BLOOD DONATION</br>SERVICES</h3>
+<div id="sidenav" class="sidenav w-64 bg-white shadow-md p-4 flex flex-col">
+    <div class="logo_section text-center">
+        <h3 class="text-xl font-bold text-purple-600 leading-tight">BLOOD AID</h3>
     </div>
-    
-    <div class="sidenav_header">
+
+    <div class="sidenav_header flex flex-col gap-2">
         <a href="{{ url_for('admin_view') }}">
-            <div class="sidenav_link">
+            <div class="sidenav_link p-3 rounded cursor-pointer {{ 'bg-purple-500 text-white' if request.endpoint == 'admin_view' }} text-center">
                 <h3>USER LIST</h3>
             </div>
         </a>
         <a href="{{ url_for('admin_donors') }}">
-            <div class="sidenav_link">
+            <div class="sidenav_link p-3 rounded cursor-pointer {{ 'bg-purple-500 text-white' if request.endpoint == 'admin_donors' }} text-center">
                 <h3>DONOR LIST</h3>
             </div>
         </a>
         <a href="#">
-            <div class="sidenav_link">
+            <div class="sidenav_link p-3 rounded cursor-pointer text-center">
                 <h3>REPORT BOX</h3>
             </div>
         </a>
         <a href="#">
-            <div class="sidenav_link">
+            <div class="sidenav_link p-3 rounded cursor-pointer text-center">
                 <h3>REQUEST LIST</h3>
             </div>
         </a>
         <a href="#">
-            <div class="sidenav_link">
+            <div class="sidenav_link p-3 rounded cursor-pointer text-center">
                 <h3>CAMPAIGN LIST</h3>
             </div>
         </a>
         <a href="#">
-            <div class="sidenav_link">
+            <div class="sidenav_link p-3 rounded cursor-pointer text-center">
                 <h3>TRUSTED HOSPITALS</h3>
             </div>
         </a>
     </div>
-    
-    <button type="button" onclick="window.location.href='{{ url_for('logout') }}'">Log Out</button>
+
+    <button type="button"
+            class="mt-auto p-3 bg-purple-600 text-white rounded"
+            onclick="window.location.href='{{ url_for('logout') }}'">
+        Log Out
+    </button>
 </div>
-
-
-<script>
-    document.querySelectorAll('.sidenav_link').forEach(link => {
-      link.addEventListener('click', function () {
-        document.querySelectorAll('.sidenav_link').forEach(el => el.classList.remove('active'));
-        this.classList.add('active');
-      });
-    });
-  </script>
-  
