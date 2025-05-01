@@ -30,7 +30,11 @@ h3 {
     /* border: 5px solid rgb(217, 5, 5); */
 }
 
-
+.sidenav_link.active {
+    background-color: #f44336; /* example highlight */
+    color: white;
+  }
+  
 
 .sidenav {
     /* background-color: #574476;

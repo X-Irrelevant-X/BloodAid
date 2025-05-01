@@ -6,7 +6,7 @@
     
     <div class="sidenav_header">
         <a href="{{ url_for('admin_view') }}">
-            <div class="sidenav_link active" class="active_color">
+            <div class="sidenav_link">
                 <h3>USER LIST</h3>
             </div>
         </a>
@@ -39,3 +39,14 @@
     
     <button type="button" onclick="window.location.href='{{ url_for('logout') }}'">Log Out</button>
 </div>
+
+
+<script>
+    document.querySelectorAll('.sidenav_link').forEach(link => {
+      link.addEventListener('click', function () {
+        document.querySelectorAll('.sidenav_link').forEach(el => el.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
+  

@@ -356,4 +356,4 @@ def delete_donor():
     username = request.form.get('username')
     if username:
         remove_donor(username)
-    return '', 200
+    return redirect(url_for('admin_donors'))
