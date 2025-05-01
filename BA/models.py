@@ -58,6 +58,7 @@ def get_user_list():
             }
             decrypted_users.append(decrypted_user)
         except Exception as e:
+            print(f"Skipping user due to decryption error: {e}")
             continue
 
     return decrypted_users
