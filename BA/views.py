@@ -347,3 +347,13 @@ def admin_view():
 
     donors = get_donor_list()
     return render_template('admin_view.html', donors=donors)
+
+def admin_view_donors():
+    donors = get_donor_list()
+    return render_template('admin_donor_view.html', donors=donors)
+
+def delete_donor():
+    username = request.form.get('username')
+    if username:
+        remove_donor(username)
+    return '', 200

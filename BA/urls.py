@@ -27,5 +27,6 @@ app.add_url_rule('/team', 'team', view_func=team_page)
 
 #Admin Routes
 app.add_url_rule('/admin/view', 'admin_view', view_func=admin_view, methods=['GET', 'POST'])
-
+app.add_url_rule('/admin/donors','admin_donors', view_func=admin_view_donors)
+app.add_url_rule('/admin/delete_donor', view_func=delete_donor, methods=['POST'])
 
