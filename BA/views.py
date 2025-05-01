@@ -129,7 +129,7 @@ def user_home():
     hospital_count = get_hospital_count()
 
     user = get_user_by_username(username)
-    is_donor = bool(user) and 'donor_list' in user
+    is_donor = is_user_donor(username)
 
     return render_template('user_home.html',
                            user_count=user_count,
