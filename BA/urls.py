@@ -30,4 +30,5 @@ app.add_url_rule('/admin/view', 'admin_view', admin_view)
 app.add_url_rule('/admin/delete_user', 'delete_user', delete_user_view, methods=['POST'])
 app.add_url_rule('/admin/donors','admin_donors', view_func=admin_view_donors)
 app.add_url_rule('/admin/delete_donor', view_func=delete_donor, methods=['POST'])
+app.add_url_rule('/admin/requests', 'admin_requests', view_func=admin_requests)
 

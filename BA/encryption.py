@@ -26,16 +26,18 @@ if not FERNET_KEY:
 
 fernet = Fernet(FERNET_KEY.encode())
 
+
 def encrypt_data(data):
     if data is None:
         return None
     return fernet.encrypt(data.encode()).decode()
+
 
 def decrypt_data(data):
     if data is None:
         return None
     try:
         return fernet.decrypt(data.encode()).decode()
-    except:
+    except Exception:
         data = None
         return data

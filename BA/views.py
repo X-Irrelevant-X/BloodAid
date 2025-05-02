@@ -4,6 +4,7 @@ from models import *
 from urls import *
 from werkzeug.security import *
 from datetime import *
+from datetime import datetime
 
 def home():
     user_count = get_user_count()
@@ -343,18 +344,31 @@ def admin_view():
     users = get_user_list()
     return render_template('admin_view.html', users=users)
 
+
 def delete_user_view():
     username = request.form.get('username')
     if username:
         delete_user(username)
     return redirect(url_for('admin_view'))
 
+
 def admin_view_donors():
     donors = get_donor_list()
     return render_template('admin_donor_view.html', donors=donors)
+
 
 def delete_donor():
     username = request.form.get('username')
     if username:
         remove_donor(username)
     return redirect(url_for('admin_donors'))
+
+
+def admin_requests():
+    requests = get_all_blood_requests()
+    current_date = datetime.now().strftime("%Y-%m-%d")
+    return render_template(
+        'admin_request_list.html',
+        requests=requests,
+        current_date=current_date
+    )

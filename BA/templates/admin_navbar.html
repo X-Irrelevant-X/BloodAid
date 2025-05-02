@@ -14,14 +14,14 @@
                 <h3>DONOR LIST</h3>
             </div>
         </a>
-        <a href="#">
-            <div class="sidenav_link p-3 rounded cursor-pointer text-center">
-                <h3>REPORT BOX</h3>
+        <a href="{{ url_for('admin_requests') }}">
+            <div class="sidenav_link p-3 rounded cursor-pointer {{ 'bg-purple-500 text-white' if request.endpoint == 'admin_requests' }} text-center">
+                <h3>REQUEST LIST</h3>
             </div>
         </a>
         <a href="#">
             <div class="sidenav_link p-3 rounded cursor-pointer text-center">
-                <h3>REQUEST LIST</h3>
+                <h3>RESPONSE LIST</h3>
             </div>
         </a>
         <a href="#">
@@ -32,6 +32,11 @@
         <a href="#">
             <div class="sidenav_link p-3 rounded cursor-pointer text-center">
                 <h3>TRUSTED HOSPITALS</h3>
+            </div>
+        </a>
+        <a href="#">
+            <div class="sidenav_link p-3 rounded cursor-pointer text-center">
+                <h3>REPORT BOX</h3>
             </div>
         </a>
     </div>

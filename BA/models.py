@@ -393,3 +393,40 @@ def is_user_donor(username):
 
     conn.close()
     return result is not None
+
+
+def get_all_blood_requests():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM blood_requests")
+    requests = cursor.fetchall()
+    conn.close()
+    decrypted_requests = []
+    for req in requests:
+        try:
+            # decrypted = {
+            #     'request_by': decrypt_data(req[1]),
+            #     'blood_group': decrypt_data(req[4]),
+            #     'quantity': decrypt_data(req[5]),
+            #     'date_needed': decrypt_data(req[8]),
+            #     'contact': decrypt_data(req[9]),
+            #     'hospital_name': decrypt_data(req[7]),
+            #     'hospital_unit': decrypt_data(req[6])
+            # }
+
+            decrypted = {
+                'request_by': req[1],
+                'name': decrypt_data(req[2]),
+                'reason': decrypt_data(req[10]),
+                'blood_group': decrypt_data(req[4]),
+                'quantity': f"{decrypt_data(req[5])} bag(s)",
+                'hospital_unit': decrypt_data(req[6]),
+                'hospital_name': decrypt_data(req[7]),
+                'date_needed': decrypt_data(req[8]),
+                'contact': decrypt_data(req[9])
+            }
+            decrypted_requests.append(decrypted)
+        except Exception as e:
+            print(f"Decryption error for request {req[0]}: {e}")
+            continue
+    return decrypted_requests

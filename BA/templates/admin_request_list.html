@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin View Users</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_view.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+
+
+    <div id="page_wrapper">
+        {% include 'admin_navbar.html' %}
+
+        <main>
+            <header>
+                <div class="text">
+                    <h2 class="head_tran"><span>REQUEST LIST</span></h2>
+                    <p class="head_head">ALL REQUEST HERE</p>
+                </div>
+            </header>
+            <section class="List">
+                <div class="tbl-header">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Requested By</th>
+                                <th>Patient Name</th>
+                                <th>Blood Group</th>
+                                <th>Quantity</th>
+                                <th>Needed By</th>
+                                <th>Contact</th>
+                                <th>Hospital Name</th>
+                                <th>Hospital Unit</th>
+                                <th>Reason</th>
+                                <th>Expired</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="tbl-content">
+                    <table>
+                        <tbody>
+                            {% for req in requests %}
+                                <tr>
+                                    <td>{{ req.request_by }}</td>
+                                    <td>{{ req.name }}</td>
+                                    <td>{{ req.blood_group }}</td>
+                                    <td>{{ req.quantity }}</td>
+                                    <td>{{ req.date_needed }}</td>
+                                    <td>{{ req.contact }}</td>
+                                    <td>{{ req.hospital_name }}</td>
+                                    <td>{{ req.hospital_unit }}</td>
+                                    <td>{{ req.reason }}</td>
+                                    <td>
+                                        {% if req.date_needed < current_date %}
+                                            <span class="text-red-500">Yes</span>
+                                        {% else %}
+                                            <span class="text-green-500">No</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+
+
+    </div>
+
+
+
+</body>
+
+</html>
