@@ -1,19 +1,12 @@
-<?php
-    session_start();
-    $conn = mysqli_connect("localhost", "root", "370_summer23", "blood_donation_services");
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>admin_view_campaign_list</title>
-    <!-- <link href="https://cdn.jsdelivr.net/npm/daisyui@3.6.1/dist/full.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.tailwindcss.com"></script> -->
-    <link rel="stylesheet" type="text/css" href="admin_view.css">
-
+    <title>Admin View Users</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_view.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body>
@@ -30,16 +23,14 @@
                 </div>
             </header>
             <section class="List">
-
                 <div class="tbl-header">
                     <table>
                         <thead>
                             <tr>
-                                <th>Venue Hospital</th>
+                                <th>Campaign Venue</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
                                 <th>Location</th>
-                                <th>Ended</th>
                             </tr>
                         </thead>
                     </table>
@@ -47,35 +38,31 @@
                 <div class="tbl-content">
                     <table>
                         <tbody>
-
-                            <?php
-                                $currentDate = date("Y-m-d");
-                                $query = "SELECT c.venue, c.start_date, c.end_date, h.location
-                                            FROM campaigns c
-                                            JOIN trusted_hospitals h ON c.venue = h.hospital_name
-                                            ORDER BY c.end_date ASC";
-                                $result = mysqli_query($conn, $query);
-
-                                while($row = mysqli_fetch_assoc($result)){
-                                    echo "<tr>";
-                                    echo "<td>". $row['venue'] ."</td>";
-                                    echo "<td>". $row['start_date'] ."</td>";
-                                    echo "<td>". $row['end_date'] ."</td>";
-                                    echo "<td><a href='" . $row['location'] . "' target='_blank'>View on Map</a></td>";
-                                    echo "<td>". ($row['end_date'] < $currentDate ? 'Yes' : 'No') ."</td>";
-                                    echo "</tr>";
-                                }
-                            ?>
-
+                            {% for campaign in campaigns %}
+                            <tr>
+                                <td>{{ campaign.venue }}</td>
+                                <td>{{ campaign.start_date }}</td>
+                                <td>{{ campaign.end_date }}</td>
+                                <td>
+                                    <a
+                                        href="{{ campaign.location }}"
+                                        target="_blank"
+                                        class="text-blue-600 hover:underline"
+                                    >
+                                        Location of {{ campaign.venue }}
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
             </section>
 
-            <p></br></p>
-            <form action="admin_add_campaign.php" method="GET">
-                <input class="add" type="submit" value="Add Campaign">
-            </form>
+{#            <p></br></p>#}
+{#            <form action="admin_add_campaign.php" method="GET">#}
+{#                <input class="add" type="submit" value="Add Campaign">#}
+{#            </form>#}
 
         </main>
 

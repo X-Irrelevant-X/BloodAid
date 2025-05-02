@@ -404,16 +404,6 @@ def get_all_blood_requests():
     decrypted_requests = []
     for req in requests:
         try:
-            # decrypted = {
-            #     'request_by': decrypt_data(req[1]),
-            #     'blood_group': decrypt_data(req[4]),
-            #     'quantity': decrypt_data(req[5]),
-            #     'date_needed': decrypt_data(req[8]),
-            #     'contact': decrypt_data(req[9]),
-            #     'hospital_name': decrypt_data(req[7]),
-            #     'hospital_unit': decrypt_data(req[6])
-            # }
-
             decrypted = {
                 'request_by': req[1],
                 'name': decrypt_data(req[2]),
@@ -430,3 +420,61 @@ def get_all_blood_requests():
             print(f"Decryption error for request {req[0]}: {e}")
             continue
     return decrypted_requests
+
+
+def get_all_reports():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT 
+            r.reported_by, 
+            r.donor_contact, 
+            r.report_box, 
+            u.username 
+        FROM report_box r
+        JOIN user_list u ON r.donor_contact = u.contact
+    ''')
+    reports = cursor.fetchall()
+    conn.close()
+    decrypted_reports = []
+    for report in reports:
+        decrypted_reports.append({
+            'reported_by': decrypt_data(report[0]),
+            'donor_contact': decrypt_data(report[1]),
+            'report_box': decrypt_data(report[2]),
+            'username': report[3]  # Username is stored as plaintext
+        })
+    return decrypted_reports
+
+
+def get_trusted_hospitals():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT hospital_name, location FROM trusted_hospitals")
+    hospitals = cursor.fetchall()
+    conn.close()
+    return [{'name': row[0], 'location': row[1]} for row in hospitals]
+
+
+def get_campaigns():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    current_date = datetime.now().strftime("%Y-%m-%d")
+    cursor.execute('''
+        SELECT 
+            c.venue, 
+            c.start_date, 
+            c.end_date, 
+            h.location 
+        FROM campaigns c
+        JOIN trusted_hospitals h ON c.venue = h.hospital_name
+        WHERE c.end_date >= ?
+    ''', (current_date,))
+    campaigns = cursor.fetchall()
+    conn.close()
+    return [{
+        'venue': row[0],
+        'start_date': row[1],
+        'end_date': row[2],
+        'location': row[3]
+    } for row in campaigns]

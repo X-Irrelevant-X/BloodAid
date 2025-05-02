@@ -372,3 +372,18 @@ def admin_requests():
         requests=requests,
         current_date=current_date
     )
+
+
+def admin_reports():
+    reports = get_all_reports()
+    return render_template('admin_report_box.html', reports=reports)
+
+
+def admin_campaigns():
+    campaigns = get_campaigns()
+    return render_template('admin_campaign_list.html', campaigns=campaigns)
+
+
+def admin_hospitals():
+    hospitals = get_trusted_hospitals()
+    return render_template('admin_trusted_hospitals.html', hospitals=hospitals)

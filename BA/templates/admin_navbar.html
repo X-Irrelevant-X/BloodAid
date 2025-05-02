@@ -19,23 +19,23 @@
                 <h3>REQUEST LIST</h3>
             </div>
         </a>
-        <a href="#">
-            <div class="sidenav_link p-3 rounded cursor-pointer text-center">
-                <h3>RESPONSE LIST</h3>
-            </div>
-        </a>
-        <a href="#">
-            <div class="sidenav_link p-3 rounded cursor-pointer text-center">
+{#        <a href="#">#}
+{#            <div class="sidenav_link p-3 rounded cursor-pointer text-center">#}
+{#                <h3>RESPONSE LIST</h3>#}
+{#            </div>#}
+{#        </a>#}
+        <a href="{{ url_for('admin_campaigns') }}">
+            <div class="sidenav_link p-3 rounded cursor-pointer {{ 'bg-purple-500 text-white' if request.endpoint == 'admin_campaigns' }} text-center">
                 <h3>CAMPAIGN LIST</h3>
             </div>
         </a>
-        <a href="#">
-            <div class="sidenav_link p-3 rounded cursor-pointer text-center">
+        <a href="{{ url_for('admin_hospitals') }}">
+            <div class="sidenav_link p-3 rounded cursor-pointer {{ 'bg-purple-500 text-white' if request.endpoint == 'admin_hospitals' }} text-center">
                 <h3>TRUSTED HOSPITALS</h3>
             </div>
         </a>
-        <a href="#">
-            <div class="sidenav_link p-3 rounded cursor-pointer text-center">
+        <a href="{{ url_for('admin_reports') }}">
+            <div class="sidenav_link p-3 rounded cursor-pointer {{ 'bg-purple-500 text-white' if request.endpoint == 'admin_reports' }} text-center">
                 <h3>REPORT BOX</h3>
             </div>
         </a>
