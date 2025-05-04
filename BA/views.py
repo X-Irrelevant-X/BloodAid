@@ -380,8 +380,22 @@ def admin_reports():
 
 
 def admin_campaigns():
+    if request.method == 'POST':
+        venue = request.form.get('venue')
+        start_date = request.form.get('start_date')
+        end_date = request.form.get('end_date')
+        add_campaign(venue, start_date, end_date)
+
     campaigns = get_campaigns()
-    return render_template('admin_campaign_list.html', campaigns=campaigns)
+    return render_template('admin_campaigns.html', campaigns=campaigns)
+
+
+def delete_campaign_view():
+    if request.method == 'POST':
+        venue = request.form.get('venue')
+        start_date = request.form.get('start_date')
+        delete_campaign(venue, start_date)
+    return redirect(url_for('admin_campaigns'))
 
 
 def admin_hospitals():

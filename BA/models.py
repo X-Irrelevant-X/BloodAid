@@ -451,6 +451,17 @@ def delete_trusted_hospital_by_email(hospital_mail):
     conn.close()
 
 
+def add_campaign(venue, start_date, end_date):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute(
+        "INSERT INTO campaigns (venue, start_date, end_date) VALUES (?, ?, ?)",
+        (venue, start_date, end_date)
+    )
+    conn.commit()
+    conn.close()
+
+
 def get_campaigns():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -473,3 +484,14 @@ def get_campaigns():
         'end_date': row[2],
         'location': row[3]
     } for row in campaigns]
+    
+    
+def delete_campaign(venue, start_date):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute(
+        "DELETE FROM campaigns WHERE venue = ? AND start_date = ?",
+        (venue, start_date)
+    )
+    conn.commit()
+    conn.close()

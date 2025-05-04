@@ -30,9 +30,13 @@ app.add_url_rule('/admin/view', 'admin_view', admin_view)
 app.add_url_rule('/admin/delete_user', 'delete_user', delete_user_view, methods=['POST'])
 app.add_url_rule('/admin/donors','admin_donors', view_func=admin_view_donors)
 app.add_url_rule('/admin/delete_donor', view_func=delete_donor, methods=['POST'])
+
 app.add_url_rule('/admin/requests', 'admin_requests', view_func=admin_requests)
 app.add_url_rule('/admin/reports', 'admin_reports', admin_reports)
-app.add_url_rule('/admin/campaigns', 'admin_campaigns', admin_campaigns)
+
+app.add_url_rule('/admin/campaigns', 'admin_campaigns', admin_campaigns, methods=['GET', 'POST'])
+app.add_url_rule('/admin/delete_campaign', 'delete_campaign', delete_campaign_view, methods=['POST'])
+
 app.add_url_rule('/admin/hospitals', 'admin_hospitals', admin_hospitals, methods=['GET', 'POST'])
 app.add_url_rule('/admin/delete_hospital', view_func=delete_hospital, methods=['POST'])
 

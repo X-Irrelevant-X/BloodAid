@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin View Users</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_view.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+
+
+    <div id="page_wrapper">
+        {% include 'admin_navbar.html' %}
+
+        <main>
+            <header>
+                <div class="text">
+                    <h2 class="head_tran"><span>CAMPAIGNS LIST</span></h2>
+                    <p class="head_head">ALL CAMPAIGNS HERE</p>
+                </div>
+
+                <div class="text-center my-4">
+                    <label for="add_campaign_modal" class="add inline-block text-white px-4 py-2 rounded cursor-pointer">
+                        Add Campaign
+                    </label>
+                </div>
+
+                <input type="checkbox" id="add_campaign_modal" class="hidden peer" />
+                <div class="peer-checked:flex hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+                    <div class="bg-white p-6 rounded-lg w-96">
+                        <h2 class="text-xl text-center font-semibold mb-4">Add Campaign</h2>
+                        <form method="POST" action="{{ url_for('admin_campaigns') }}">
+                            <input name="venue" placeholder="Venue" class="w-full mb-2 p-2 border rounded" required />
+                            <input type="date" name="start_date" class="w-full mb-2 p-2 border rounded" required />
+                            <input type="date" name="end_date" class="w-full mb-4 p-2 border rounded" required />
+                            <div class="flex justify-between">
+                                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Add</button>
+                                <label for="add_campaign_modal" class="bg-gray-300 px-4 py-2 rounded cursor-pointer">Cancel</label>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </header>
+            <section class="List">
+                <div class="tbl-header">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="text-center">Campaign Venue</th>
+                                <th class="text-center">Start Date</th>
+                                <th class="text-center">End Date</th>
+                                <th class="text-center">Location</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="tbl-content">
+                    <table>
+                        <tbody>
+                            {% for campaign in campaigns %}
+                            <tr>
+                                <td class="text-center">{{ campaign.venue }}</td>
+                                <td class="text-center">{{ campaign.start_date }}</td>
+                                <td class="text-center">{{ campaign.end_date }}</td>
+                                <td class="text-center">
+                                    <a
+                                        href="{{ campaign.location }}"
+                                        target="_blank"
+                                        class="text-blue-600 hover:underline"
+                                    >
+                                        {{ campaign.venue }}
+                                    </a>
+                                </td>
+
+                                <td class="pl-10 text-center">
+                                    <label for="delete_modal_{{ loop.index }}" class="delete bg-red-500 text-white px-3 py-1 rounded cursor-pointer">
+                                        Delete
+                                    </label>
+                                
+                                    <input type="checkbox" id="delete_modal_{{ loop.index }}" class="hidden peer">
+                                    <div class="peer-checked:flex hidden fixed inset-0 items-center justify-center bg-black bg-opacity-50 z-50">
+                                        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+                                            <h2 class="text-xl font-semibold mb-4">Confirm Deletion</h2>
+                                            <p class="mb-4">Are you sure you want to delete the campaign at <strong>{{ campaign.venue }}</strong> starting from <strong>{{ campaign.start_date }}</strong>?</p>
+                                            <div class="flex justify-between">
+                                                <form method="POST" action="{{ url_for('delete_campaign') }}">
+                                                    <input type="hidden" name="venue" value="{{ campaign.venue }}">
+                                                    <input type="hidden" name="start_date" value="{{ campaign.start_date }}">
+                                                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Yes, Delete</button>
+                                                </form>
+                                                <label for="delete_modal_{{ loop.index }}" class="bg-gray-300 px-4 py-2 rounded cursor-pointer">Cancel</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>                                
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+{#            <p></br></p>#}
+{#            <form action="admin_add_campaign.php" method="GET">#}
+{#                <input class="add" type="submit" value="Add Campaign">#}
+{#            </form>#}
+
+        </main>
+
+
+
+    </div>
+
+
+
+</body>
+
+</html>
