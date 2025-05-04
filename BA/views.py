@@ -395,3 +395,10 @@ def admin_hospitals():
 
     hospitals = get_trusted_hospitals()
     return render_template('admin_trusted_hospitals.html', hospitals=hospitals)
+
+
+def delete_hospital():
+    if request.method == 'POST':
+        hospital_mail = request.form.get('hospital_mail')
+        delete_trusted_hospital_by_email(hospital_mail)
+    return redirect(url_for('admin_hospitals'))

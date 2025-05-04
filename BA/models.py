@@ -436,10 +436,19 @@ def get_trusted_hospitals():
         FROM trusted_hospitals
         ORDER BY hospital_name ASC
     """)
+    
     hospitals = cursor.fetchall()
     conn.close()
     
     return [{'name': row[0], 'email': row[1], 'hotline': row[2], 'location': row[3]} for row in hospitals]
+
+
+def delete_trusted_hospital_by_email(hospital_mail):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM trusted_hospitals WHERE hospital_mail = ?", (hospital_mail,))
+    conn.commit()
+    conn.close()
 
 
 def get_campaigns():

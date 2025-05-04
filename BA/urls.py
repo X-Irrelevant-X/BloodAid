@@ -34,3 +34,5 @@ app.add_url_rule('/admin/requests', 'admin_requests', view_func=admin_requests)
 app.add_url_rule('/admin/reports', 'admin_reports', admin_reports)
 app.add_url_rule('/admin/campaigns', 'admin_campaigns', admin_campaigns)
 app.add_url_rule('/admin/hospitals', 'admin_hospitals', admin_hospitals, methods=['GET', 'POST'])
+app.add_url_rule('/admin/delete_hospital', view_func=delete_hospital, methods=['POST'])
+

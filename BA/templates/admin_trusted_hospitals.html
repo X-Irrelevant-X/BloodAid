@@ -68,6 +68,7 @@
                                 <th class="text-center">Email</th>
                                 <th class="text-center">Hotline</th>
                                 <th class="text-center">Location</th>
+                                <th class="text-right pr-6">Action</th>
                             </tr>
                         </thead>
                     </table>
@@ -86,8 +87,32 @@
                                         target="_blank"
                                         class="text-blue-600 hover:underline"
                                     >
-                                        Location of {{ hospital.name }}
+                                        {{ hospital.name }}
                                     </a>
+                                </td>
+
+                                <td class="text-right pr-4">
+                                    <label for="modal_delete_{{ loop.index }}" class="delete bg-red-500 text-white px-3 py-1 rounded cursor-pointer">
+                                        Delete
+                                    </label>
+                        
+                                    <input type="checkbox" id="modal_delete_{{ loop.index }}" class="hidden peer">
+                        
+                                    <div class="peer-checked:flex hidden fixed inset-0 items-center justify-center bg-black bg-opacity-50 z-50">
+                                        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+                                            <h2 class="text-xl text-center font-semibold mb-4">Confirm Deletion</h2>
+                                            </br>
+                                            <p class="mb-4 text-center">Are you sure you want to remove <strong>{{ hospital.name }}</strong> from the trusted hospitals?</p>
+                                            </br>
+                                            <div class="flex justify-between">
+                                                <form method="POST" action="{{ url_for('delete_hospital') }}">
+                                                    <input type="hidden" name="hospital_mail" value="{{ hospital.email }}">
+                                                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Yes, Remove</button>
+                                                </form>
+                                                <label for="modal_delete_{{ loop.index }}" class="bg-gray-300 px-4 py-2 rounded cursor-pointer">Cancel</label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             {% endfor %}
