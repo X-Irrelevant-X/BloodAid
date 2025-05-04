@@ -10,8 +10,6 @@
 </head>
 
 <body>
-
-
     <div id="page_wrapper">
         {% include 'admin_navbar.html' %}
 
@@ -19,7 +17,7 @@
             <header>
                 <div class="text">
                     <h2 class="head_tran"><span>REQUEST LIST</span></h2>
-                    <p class="head_head">ALL REQUEST HERE</p>
+                    <p class="head_head">ALL REQUEST HERE</p></br>
                 </div>
             </header>
             <section class="List">
@@ -27,14 +25,14 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Requested By</th>
-                                <th>Patient Name</th>
-                                <th>Blood Group</th>
+                                <th class="text-sm">Requested By</th>
+                                <th class="text-sm">Patient Name</th>
+                                <th class="text-sm">Blood Group</th>
                                 <th>Quantity</th>
-                                <th>Needed By</th>
+                                <th class="text-sm">Needed By</th>
                                 <th>Contact</th>
-                                <th>Hospital Name</th>
-                                <th>Hospital Unit</th>
+                                <th class="text-sm">Hospital Name</th>
+                                <th class="text-sm">Hospital Unit</th>
                                 <th>Reason</th>
                                 <th>Expired</th>
                             </tr>
@@ -69,13 +67,7 @@
                 </div>
             </section>
         </main>
-
-
-
     </div>
-
-
-
 </body>
 
 </html>

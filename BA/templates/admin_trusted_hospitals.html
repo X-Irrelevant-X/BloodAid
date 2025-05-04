@@ -10,8 +10,6 @@
 </head>
 
 <body>
-
-
     <div id="page_wrapper">
         {% include 'admin_navbar.html' %}
 
@@ -107,7 +105,7 @@
                                             <div class="flex justify-between">
                                                 <form method="POST" action="{{ url_for('delete_hospital') }}">
                                                     <input type="hidden" name="hospital_mail" value="{{ hospital.email }}">
-                                                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Yes, Remove</button>
+                                                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Delete</button>
                                                 </form>
                                                 <label for="modal_delete_{{ loop.index }}" class="bg-gray-300 px-4 py-2 rounded cursor-pointer">Cancel</label>
                                             </div>
@@ -120,15 +118,8 @@
                     </table>
                 </div>
             </section>
-
-            <p></br></p>
         </main>
-
-
     </div>
-
-
-
 </body>
 
 </html>

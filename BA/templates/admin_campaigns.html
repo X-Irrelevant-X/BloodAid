@@ -10,8 +10,6 @@
 </head>
 
 <body>
-
-
     <div id="page_wrapper">
         {% include 'admin_navbar.html' %}
 
@@ -91,7 +89,7 @@
                                                 <form method="POST" action="{{ url_for('delete_campaign') }}">
                                                     <input type="hidden" name="venue" value="{{ campaign.venue }}">
                                                     <input type="hidden" name="start_date" value="{{ campaign.start_date }}">
-                                                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Yes, Delete</button>
+                                                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Delete</button>
                                                 </form>
                                                 <label for="delete_modal_{{ loop.index }}" class="bg-gray-300 px-4 py-2 rounded cursor-pointer">Cancel</label>
                                             </div>
@@ -104,20 +102,8 @@
                     </table>
                 </div>
             </section>
-
-{#            <p></br></p>#}
-{#            <form action="admin_add_campaign.php" method="GET">#}
-{#                <input class="add" type="submit" value="Add Campaign">#}
-{#            </form>#}
-
         </main>
-
-
-
     </div>
-
-
-
 </body>
 
 </html>
