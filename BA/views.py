@@ -385,5 +385,13 @@ def admin_campaigns():
 
 
 def admin_hospitals():
+    if request.method == 'POST':
+        name = request.form['hospital_name']
+        email = request.form['hospital_mail']
+        hotline = request.form['hotline']
+        location = request.form['location']
+        add_trusted_hospital(name, email, hotline, location)
+        return redirect(url_for('admin_hospitals'))
+
     hospitals = get_trusted_hospitals()
     return render_template('admin_trusted_hospitals.html', hospitals=hospitals)

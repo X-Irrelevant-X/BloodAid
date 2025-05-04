@@ -415,13 +415,31 @@ def is_user_donor(username):
     return result is not None
 
 
+def add_trusted_hospital(name, email, hotline, location):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO trusted_hospitals (hospital_name, hospital_mail, hotline, location)
+        VALUES (?, ?, ?, ?)
+    """, (name, email, hotline, location))
+
+    conn.commit()
+    conn.close()
+
+
 def get_trusted_hospitals():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("SELECT hospital_name, location FROM trusted_hospitals")
+    cursor.execute("""
+        SELECT hospital_name, hospital_mail, hotline, location
+        FROM trusted_hospitals
+        ORDER BY hospital_name ASC
+    """)
     hospitals = cursor.fetchall()
     conn.close()
-    return [{'name': row[0], 'location': row[1]} for row in hospitals]
+    
+    return [{'name': row[0], 'email': row[1], 'hotline': row[2], 'location': row[3]} for row in hospitals]
 
 
 def get_campaigns():

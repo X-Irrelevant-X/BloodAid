@@ -21,14 +21,53 @@
                     <h2 class="head_tran"><span>TRUSTED HOSPITALS</span></h2>
                     <p class="head_head">ALL TRUSTED HOSPITALS ARE LISTED HERE</p>
                 </div>
+                
+                <div class="text-center">
+                    <label for="modal_add_hospital" class="add inline-block text-white px-4 py-2 rounded cursor-pointer">
+                        Add Hospital
+                    </label>
+                </div>                
+                
+                <input type="checkbox" id="modal_add_hospital" class="hidden peer" />
+
+                <div class="peer-checked:flex hidden fixed inset-0 items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+                        <h2 class="text-xl text-center font-semibold mb-4">Add Trusted Hospital</h2>
+                        <form method="POST" action="{{ url_for('admin_hospitals') }}">
+                            <div class="mb-3">
+                                <label class="block mb-1">Hospital Name</label>
+                                <input type="text" name="hospital_name" required class="w-full border px-3 py-2 rounded" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="block mb-1">Hospital Email</label>
+                                <input type="email" name="hospital_mail" required class="w-full border px-3 py-2 rounded" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="block mb-1">Hotline</label>
+                                <input type="text" name="hotline" required class="w-full border px-3 py-2 rounded" />
+                            </div>
+                            <div class="mb-4">
+                                <label class="block mb-1">Location (Google Maps URL)</label>
+                                <input type="url" name="location" required class="w-full border px-3 py-2 rounded" />
+                            </div>
+                            <div class="flex justify-between">
+                                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Add</button>
+                                <label for="modal_add_hospital" class="bg-gray-300 px-4 py-2 rounded cursor-pointer">Cancel</label>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </header>
+
             <section class="List">
                 <div class="tbl-header">
                     <table>
                         <thead>
                             <tr>
-                                <th>Hospital Name</th>
-                                <th>Location</th>
+                                <th class="text-center">Hospital Name</th>
+                                <th class="text-center">Email</th>
+                                <th class="text-center">Hotline</th>
+                                <th class="text-center">Location</th>
                             </tr>
                         </thead>
                     </table>
@@ -38,8 +77,10 @@
                         <tbody>
                             {% for hospital in hospitals %}
                             <tr>
-                                <td>{{ hospital.name }}</td>
-                                <td>
+                                <td class="text-center">{{ hospital.name }}</td>
+                                <td class="text-center">{{ hospital.email }}</td>
+                                <td class="text-center">{{ hospital.hotline }}</td>
+                                <td class="text-center">
                                     <a
                                         href="{{ hospital.location }}"
                                         target="_blank"
@@ -55,12 +96,7 @@
                 </div>
             </section>
 
-{#            <p></br></p>#}
-{#            <form action="admin_add_trusted_hospitals.php" method="GET">#}
-{#                <input class="add" type="submit" value="Add Hospital">#}
-{#            </form>#}
-
-
+            <p></br></p>
         </main>
 
 
