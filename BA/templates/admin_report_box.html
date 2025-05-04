@@ -26,9 +26,9 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Reported User</th>
-                                <th>Reported By</th>
-                                <th>Report Reason</th>
+                                <th class="text-center">Reported User</th>
+                                <th class="text-center">Reported By</th>
+                                <th class="text-center">Report Reason</th>
                             </tr>
                         </thead>
                     </table>
@@ -38,9 +38,9 @@
                         <tbody>
                             {% for report in reports %}
                             <tr>
-                                <td>{{ report.username }}</td>
-                                <td>{{ report.reported_by }}</td>
-                                <td>{{ report.report_box }}</td>
+                                <td class="text-center">{{ report.username }}</td>
+                                <td class="text-center">{{ report.reported_by }}</td>
+                                <td class="text-center">{{ report.report_box }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>

@@ -165,6 +165,22 @@ def user_exists_by_contact(contact):
     return False
 
 
+def get_username_by_contact(donor_contact):
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT username, contact FROM user_list")
+    users = cursor.fetchall()
+    conn.close()
+
+    for user in users:
+        decrypted_contact = decrypt_data(user['contact'])
+        if decrypted_contact == donor_contact:
+            return user['username']
+    
+    return None 
+
 
 def submit_report(reported_by, contact, reason):
     conn = sqlite3.connect(DB_PATH)
@@ -172,7 +188,7 @@ def submit_report(reported_by, contact, reason):
     encrypted_contact = encrypt_data(contact)
     encrypted_reason = encrypt_data(reason)
     cursor.execute(
-        "INSERT INTO report_box (reported_by, donor_contact, report_box) VALUES (?, ?, ?)",
+        "INSERT INTO reports (reported_by, donor_contact, report_box) VALUES (?, ?, ?)",
         (reported_by, encrypted_contact, encrypted_reason)
     )
     conn.commit()
@@ -184,16 +200,22 @@ def get_all_reports():
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM report_box")
+    cursor.execute("SELECT reported_by, donor_contact, report_box FROM reports")
     reports = cursor.fetchall()
     conn.close()
 
     decrypted_reports = []
     for report in reports:
+        reported_by = report['reported_by']
+        donor_contact = decrypt_data(report['donor_contact'])
+        report_box = decrypt_data(report['report_box'])
+        
+        report_username = get_username_by_contact(donor_contact)
+        
         decrypted_reports.append({
-            'reported_by': decrypt_data(report['reported_by']),
-            'donor_contact': decrypt_data(report['donor_contact']),
-            'report_box': decrypt_data(report['report_box'])
+            'reported_by': reported_by,
+            'username': report_username,
+            'report_box': report_box
         })
 
     return decrypted_reports
@@ -206,6 +228,7 @@ def get_user_password(username):
     result = cursor.fetchone()
     db.close()
     return result[0] if result else None
+
 
 def update_user_password(username, new_password_hash):
     db = sqlite3.connect(DB_PATH)
@@ -223,14 +246,6 @@ def delete_user(username):
     conn.close()
 
 
-def get_trusted_hospitals():
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM trusted_hospitals")
-    hospitals = cursor.fetchall()
-    conn.close()
-    return hospitals
-
 def is_trusted_hospital(hospital_name):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -239,6 +254,7 @@ def is_trusted_hospital(hospital_name):
     conn.close()
     return result is not None
 
+
 def is_already_donor(username):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -246,6 +262,7 @@ def is_already_donor(username):
     result = cursor.fetchone()
     conn.close()
     return result is not None
+
 
 def add_donor(username, donation_date, approver_hospital):
     conn = sqlite3.connect(DB_PATH)
@@ -258,6 +275,7 @@ def add_donor(username, donation_date, approver_hospital):
                    (username, encrypted_donation_date, encrypted_approver_hospital))
     conn.commit()
     conn.close()
+
 
 def remove_donor(username):
     conn = sqlite3.connect(DB_PATH)
@@ -300,6 +318,7 @@ def get_donor_list():
     
     return decrypted_donors
 
+
 def delete_donor(username):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -307,6 +326,7 @@ def delete_donor(username):
     cursor.execute("DELETE FROM donor_list WHERE username = ?", (username,))
     conn.commit()
     conn.close()
+    
     
 def insert_blood_request(request_by, name, age, blood_group, quantity, hospital_unit, hospital_name, date_needed, contact, reason):
     conn = sqlite3.connect(DB_PATH)
@@ -393,58 +413,6 @@ def is_user_donor(username):
 
     conn.close()
     return result is not None
-
-
-def get_all_blood_requests():
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM blood_requests")
-    requests = cursor.fetchall()
-    conn.close()
-    decrypted_requests = []
-    for req in requests:
-        try:
-            decrypted = {
-                'request_by': req[1],
-                'name': decrypt_data(req[2]),
-                'reason': decrypt_data(req[10]),
-                'blood_group': decrypt_data(req[4]),
-                'quantity': f"{decrypt_data(req[5])} bag(s)",
-                'hospital_unit': decrypt_data(req[6]),
-                'hospital_name': decrypt_data(req[7]),
-                'date_needed': decrypt_data(req[8]),
-                'contact': decrypt_data(req[9])
-            }
-            decrypted_requests.append(decrypted)
-        except Exception as e:
-            print(f"Decryption error for request {req[0]}: {e}")
-            continue
-    return decrypted_requests
-
-
-def get_all_reports():
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute('''
-        SELECT 
-            r.reported_by, 
-            r.donor_contact, 
-            r.report_box, 
-            u.username 
-        FROM report_box r
-        JOIN user_list u ON r.donor_contact = u.contact
-    ''')
-    reports = cursor.fetchall()
-    conn.close()
-    decrypted_reports = []
-    for report in reports:
-        decrypted_reports.append({
-            'reported_by': decrypt_data(report[0]),
-            'donor_contact': decrypt_data(report[1]),
-            'report_box': decrypt_data(report[2]),
-            'username': report[3]  # Username is stored as plaintext
-        })
-    return decrypted_reports
 
 
 def get_trusted_hospitals():
