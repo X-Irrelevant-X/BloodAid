@@ -28,6 +28,17 @@
                     <h3>Reason</h3>
                     <div class="reason-box">{{ request.reason }}</div>
                 </div>
+                {% if is_donor and (request.quantity|int) > 0 %}
+                <form action="{{ url_for('respond_request') }}" method="post" class="respond-form">
+                    <input type="hidden" name="request_id" value="{{ request.id }}" />
+                    <label for="bags-{{ request.id }}"><strong>Donate:</strong></label>
+                    <select id="bags-{{ request.id }}" name="bags">
+                        <option value="1">1 bag</option>
+                        <option value="2" {% if (request.quantity|int) < 2 %}disabled{% endif %}>2 bags</option>
+                    </select>
+                    <button type="submit" class="respond-btn">Respond</button>
+                </form>
+                {% endif %}
             </div>            
             <div class="card-footer">
                 <span class="location">{{ request.location }}</span>

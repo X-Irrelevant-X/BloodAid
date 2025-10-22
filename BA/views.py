@@ -295,7 +295,29 @@ def request_blood():
 
 def blood_requests():
     requests_data = get_all_blood_requests()
-    return render_template('bloodrequests_list.html', requests=requests_data)
+    username = session.get('username')
+    donor_flag = is_user_donor(username) if username else False
+    return render_template('bloodrequests_list.html', requests=requests_data, is_donor=donor_flag)
+
+
+def respond_request():
+    if request.method != 'POST':
+        return redirect(url_for('blood_requests'))
+    username = session.get('username')
+    if not username:
+        flash('Please log in to respond.', 'error')
+        return redirect(url_for('login'))
+    if not is_user_donor(username):
+        flash('Only registered donors can respond.', 'error')
+        return redirect(url_for('blood_requests'))
+    request_id = request.form.get('request_id')
+    bags = request.form.get('bags')
+    if not request_id or not bags:
+        flash('Missing response data.', 'error')
+        return redirect(url_for('blood_requests'))
+    ok, msg = respond_to_blood_request(request_id, username, bags)
+    flash(msg, 'success' if ok else 'error')
+    return redirect(url_for('blood_requests'))
 
 
 def campaigns_view():
