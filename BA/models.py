@@ -651,3 +651,31 @@ def get_responders_grouped():
         if donor not in grouped[req_id]:
             grouped[req_id].append(donor)
     return grouped
+
+def delete_blood_request(request_id, username):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    try:
+        cursor.execute('BEGIN IMMEDIATE')
+        # Ensure the request belongs to the user
+        row = cursor.execute(
+            'SELECT request_id FROM blood_requests WHERE request_id = ? AND request_by = ?',
+            (request_id, username)
+        ).fetchone()
+        if not row:
+            conn.rollback()
+            return False
+        # Remove related responses first
+        cursor.execute('DELETE FROM request_respond WHERE b_request_id = ?', (request_id,))
+        # Delete the request
+        cursor.execute('DELETE FROM blood_requests WHERE request_id = ?', (request_id,))
+        conn.commit()
+        return True
+    except Exception:
+        try:
+            conn.rollback()
+        except Exception:
+            pass
+        return False
+    finally:
+        conn.close()

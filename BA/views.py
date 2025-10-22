@@ -302,7 +302,34 @@ def blood_requests():
         user = get_user_by_username(username)
         if user:
             user_bg = user.get('blood_group')
-    return render_template('bloodrequests_list.html', requests=requests_data, is_donor=donor_flag, user_bg=user_bg)
+    return render_template(
+        'bloodrequests_list.html',
+        requests=requests_data,
+        is_donor=donor_flag,
+        user_bg=user_bg,
+        username=username
+    )
+
+def delete_blood_request_view():
+    if request.method != 'POST':
+        return redirect(url_for('blood_requests'))
+    username = session.get('username')
+    if not username:
+        flash('Please log in to delete your request.', 'error')
+        return redirect(url_for('login'))
+    request_id = request.form.get('request_id')
+    try:
+        req_id_int = int(request_id)
+    except Exception:
+        flash('Invalid request.', 'error')
+        return redirect(url_for('blood_requests'))
+
+    ok = delete_blood_request(req_id_int, username)
+    if ok:
+        flash('Your blood request was deleted.', 'success')
+    else:
+        flash('Failed to delete the request.', 'error')
+    return redirect(url_for('blood_requests'))
 
 
 def respond_request():
@@ -348,32 +375,17 @@ def campaigns_view():
 def team_page():
     team_members = [
         {
-            'name': 'Jannatul Ferdous',
-            'role': 'Worked with Frontend',
-            'image': 'nawrin.jpg',
-            'github': 'https://github.com/'
-        },
-        {
-            'name': 'Md Samsul Arefin',
-            'role': 'Worked with Frontend',
-            'image': 'samsul.jpg',
-            'github': 'https://github.com/Crosshairs532'
-        },
-        {
             'name': 'Fardous Nayeem',
-            'role': 'Worked with Backend',
             'image': 'nayeem.jpg',
             'github': 'https://github.com/X-Irrelevant-X'
         },
         {
             'name': 'Monowarul Islam',
-            'role': 'Worked with Backend',
             'image': 'monowarul.jpg',
             'github': 'https://github.com/ShrabanMI'
         },
         {
             'name': 'Naser-Al-Noman',
-            'role': 'Worked with Database',
             'image': 'naser.jpg',
             'github': 'https://github.com/Naser-Al-Noman'
         },

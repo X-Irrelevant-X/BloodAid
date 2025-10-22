@@ -28,7 +28,12 @@
                     <h3>Reason</h3>
                     <div class="reason-box">{{ request.reason }}</div>
                 </div>
-                {% if is_donor and user_bg and (user_bg == request.blood_group) and (request.quantity|int) > 0 %}
+                {% if username and request.request_by == username %}
+                <form action="{{ url_for('delete_request') }}" method="post" class="respond-form" aria-label="Delete blood request">
+                    <input type="hidden" name="request_id" value="{{ request.id }}" />
+                    <button type="submit" class="respond-btn" title="Delete this request">Delete</button>
+                </form>
+                {% elif is_donor and user_bg and (user_bg == request.blood_group) and (request.quantity|int) > 0 %}
                 <form action="{{ url_for('respond_request') }}" method="post" class="respond-form" aria-label="Respond to blood request">
                     <input type="hidden" name="request_id" value="{{ request.id }}" />
                     <label class="respond-label" for="bags-{{ request.id }}"><strong>Donate</strong></label>
