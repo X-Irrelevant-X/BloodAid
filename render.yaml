@@ -4,16 +4,9 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r BA/requirements.txt
-    startCommand: cd BA && gunicorn urls:app -w 2 -k gthread -b 0.0.0.0:$PORT
+    startCommand: cd BA && gunicorn urls:app -w 1 -k gthread -b 0.0.0.0:$PORT
     autoDeploy: true
     envVars:
-      # Provide DB path to use a persistent disk on Render
-      - key: DB_PATH
-        value: /var/data/zDB.sqlite3
       # Keep FERNET_KEY managed in the Render dashboard (do not commit secrets)
       - key: FERNET_KEY
         sync: false
-    disk:
-      name: data
-      mountPath: /var/data
-      sizeGB: 1
