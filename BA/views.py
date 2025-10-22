@@ -294,7 +294,7 @@ def request_blood():
     return render_template('request_blood.html')
 
 def blood_requests():
-    requests_data = get_all_blood_requests()
+    requests_data = get_active_blood_requests()
     username = session.get('username')
     donor_flag = is_user_donor(username) if username else False
     return render_template('bloodrequests_list.html', requests=requests_data, is_donor=donor_flag)
@@ -388,11 +388,13 @@ def delete_donor():
 
 def admin_requests():
     requests = get_all_blood_requests()
+    responders_map = get_responders_grouped()
     current_date = datetime.now().strftime("%Y-%m-%d")
     return render_template(
         'admin_request_list.html',
         requests=requests,
-        current_date=current_date
+        current_date=current_date,
+        responders_map=responders_map
     )
 
 

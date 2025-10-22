@@ -34,6 +34,7 @@
                                 <th class="text-sm">Hospital Name</th>
                                 <th class="text-sm">Hospital Unit</th>
                                 <th>Reason</th>
+                                <th class="text-sm">Responders</th>
                                 <th>Expired</th>
                             </tr>
                         </thead>
@@ -53,6 +54,16 @@
                                     <td>{{ req.hospital_name }}</td>
                                     <td>{{ req.hospital_unit }}</td>
                                     <td>{{ req.reason }}</td>
+                                    <td>
+                                        {% set res_list = responders_map.get(req.id) %}
+                                        {% if res_list %}
+                                            {{ ", ".join(res_list) }}
+                                        {% elif req.responders %}
+                                            {{ req.responders }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
                                     <td>
                                         {% if req.date_needed < current_date %}
                                             <span class="text-red-500">Yes</span>
