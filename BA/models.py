@@ -1,9 +1,11 @@
 import sqlite3
+import os
 from werkzeug.security import *
 from encryption import *
 from datetime import *
 
-DB_PATH = 'zDB.sqlite3'
+# Allow overriding DB path via environment (for Render disk persistence)
+DB_PATH = os.getenv('DB_PATH', 'zDB.sqlite3')
 
 
 def insert_user(data):
