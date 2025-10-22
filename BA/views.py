@@ -297,7 +297,12 @@ def blood_requests():
     requests_data = get_active_blood_requests()
     username = session.get('username')
     donor_flag = is_user_donor(username) if username else False
-    return render_template('bloodrequests_list.html', requests=requests_data, is_donor=donor_flag)
+    user_bg = None
+    if username:
+        user = get_user_by_username(username)
+        if user:
+            user_bg = user.get('blood_group')
+    return render_template('bloodrequests_list.html', requests=requests_data, is_donor=donor_flag, user_bg=user_bg)
 
 
 def respond_request():
@@ -315,6 +320,21 @@ def respond_request():
     if not request_id or not bags:
         flash('Missing response data.', 'error')
         return redirect(url_for('blood_requests'))
+    # Ensure donor blood group matches the request
+    try:
+        req_id_int = int(request_id)
+    except Exception:
+        flash('Invalid request.', 'error')
+        return redirect(url_for('blood_requests'))
+    req = get_blood_request_by_id(req_id_int)
+    user = get_user_by_username(username)
+    if not req:
+        flash('Request not found.', 'error')
+        return redirect(url_for('blood_requests'))
+    if not user or user.get('blood_group') != req.get('blood_group'):
+        flash('Your blood group does not match this request.', 'error')
+        return redirect(url_for('blood_requests'))
+
     ok, msg = respond_to_blood_request(request_id, username, bags)
     flash(msg, 'success' if ok else 'error')
     return redirect(url_for('blood_requests'))
