@@ -294,8 +294,77 @@ def request_blood():
     return render_template('request_blood.html')
 
 def blood_requests():
-    requests_data = get_all_blood_requests()
-    return render_template('bloodrequests_list.html', requests=requests_data)
+    requests_data = get_active_blood_requests()
+    username = session.get('username')
+    donor_flag = is_user_donor(username) if username else False
+    user_bg = None
+    if username:
+        user = get_user_by_username(username)
+        if user:
+            user_bg = user.get('blood_group')
+    return render_template(
+        'bloodrequests_list.html',
+        requests=requests_data,
+        is_donor=donor_flag,
+        user_bg=user_bg,
+        username=username
+    )
+
+def delete_blood_request_view():
+    if request.method != 'POST':
+        return redirect(url_for('blood_requests'))
+    username = session.get('username')
+    if not username:
+        flash('Please log in to delete your request.', 'error')
+        return redirect(url_for('login'))
+    request_id = request.form.get('request_id')
+    try:
+        req_id_int = int(request_id)
+    except Exception:
+        flash('Invalid request.', 'error')
+        return redirect(url_for('blood_requests'))
+
+    ok = delete_blood_request(req_id_int, username)
+    if ok:
+        flash('Your blood request was deleted.', 'success')
+    else:
+        flash('Failed to delete the request.', 'error')
+    return redirect(url_for('blood_requests'))
+
+
+def respond_request():
+    if request.method != 'POST':
+        return redirect(url_for('blood_requests'))
+    username = session.get('username')
+    if not username:
+        flash('Please log in to respond.', 'error')
+        return redirect(url_for('login'))
+    if not is_user_donor(username):
+        flash('Only registered donors can respond.', 'error')
+        return redirect(url_for('blood_requests'))
+    request_id = request.form.get('request_id')
+    bags = request.form.get('bags')
+    if not request_id or not bags:
+        flash('Missing response data.', 'error')
+        return redirect(url_for('blood_requests'))
+    # Ensure donor blood group matches the request
+    try:
+        req_id_int = int(request_id)
+    except Exception:
+        flash('Invalid request.', 'error')
+        return redirect(url_for('blood_requests'))
+    req = get_blood_request_by_id(req_id_int)
+    user = get_user_by_username(username)
+    if not req:
+        flash('Request not found.', 'error')
+        return redirect(url_for('blood_requests'))
+    if not user or user.get('blood_group') != req.get('blood_group'):
+        flash('Your blood group does not match this request.', 'error')
+        return redirect(url_for('blood_requests'))
+
+    ok, msg = respond_to_blood_request(request_id, username, bags)
+    flash(msg, 'success' if ok else 'error')
+    return redirect(url_for('blood_requests'))
 
 
 def campaigns_view():
@@ -306,32 +375,17 @@ def campaigns_view():
 def team_page():
     team_members = [
         {
-            'name': 'Jannatul Ferdous',
-            'role': 'Worked with Frontend',
-            'image': 'nawrin.jpg',
-            'github': 'https://github.com/'
-        },
-        {
-            'name': 'Md Samsul Arefin',
-            'role': 'Worked with Frontend',
-            'image': 'samsul.jpg',
-            'github': 'https://github.com/Crosshairs532'
-        },
-        {
             'name': 'Fardous Nayeem',
-            'role': 'Worked with Backend',
             'image': 'nayeem.jpg',
             'github': 'https://github.com/X-Irrelevant-X'
         },
         {
             'name': 'Monowarul Islam',
-            'role': 'Worked with Backend',
             'image': 'monowarul.jpg',
             'github': 'https://github.com/ShrabanMI'
         },
         {
             'name': 'Naser-Al-Noman',
-            'role': 'Worked with Database',
             'image': 'naser.jpg',
             'github': 'https://github.com/Naser-Al-Noman'
         },
@@ -366,11 +420,13 @@ def delete_donor():
 
 def admin_requests():
     requests = get_all_blood_requests()
+    responders_map = get_responders_grouped()
     current_date = datetime.now().strftime("%Y-%m-%d")
     return render_template(
         'admin_request_list.html',
         requests=requests,
-        current_date=current_date
+        current_date=current_date,
+        responders_map=responders_map
     )
 
 

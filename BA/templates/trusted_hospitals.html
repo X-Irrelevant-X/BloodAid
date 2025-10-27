@@ -28,10 +28,10 @@
                 <tbody>
                     {% for hospital in hospitals %}
                     <tr>
-                        <td>{{ hospital[0] }}</td>  <!-- Hospital Name -->
-                        <td>{{ hospital[1] }}</td>  <!-- Hospital Mail -->
-                        <td>{{ hospital[2] }}</td>  <!-- Hotline -->
-                        <td><a href="{{ hospital[3] }}" target="_blank">View on Map</a></td>  <!-- Location (Map) -->
+                        <td>{{ hospital.name }}</td>
+                        <td>{{ hospital.email }}</td>
+                        <td>{{ hospital.hotline }}</td>
+                        <td><a href="{{ hospital.location }}" target="_blank">View on Map</a></td>
                     </tr>
                     {% else %}
                     <tr>

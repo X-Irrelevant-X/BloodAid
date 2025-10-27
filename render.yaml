@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: bloodaid
+    env: python
+    plan: free
+    buildCommand: pip install -r BA/requirements.txt
+    startCommand: cd BA && gunicorn urls:app -w 1 -k gthread -b 0.0.0.0:$PORT
+    autoDeploy: true
+    envVars:
+      # Keep FERNET_KEY managed in the Render dashboard (do not commit secrets)
+      - key: FERNET_KEY
+        sync: false

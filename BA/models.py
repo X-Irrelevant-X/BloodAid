@@ -1,9 +1,11 @@
 import sqlite3
+import os
 from werkzeug.security import *
 from encryption import *
 from datetime import *
 
-DB_PATH = 'zDB.sqlite3'
+# Allow overriding DB path via environment (for Render disk persistence)
+DB_PATH = os.getenv('DB_PATH', 'zDB.sqlite3')
 
 
 def insert_user(data):
@@ -375,9 +377,29 @@ def get_all_blood_requests():
             'reason': decrypt_data(blood[10]),
             'location': "Contact for Location"
         }
+        if len(blood) > 11:
+            decrypted['responders'] = blood[11]
         decrypted_requests.append(decrypted)
     
     return decrypted_requests
+
+
+def get_active_blood_requests():
+    requests = get_all_blood_requests()
+    today = datetime.now().date()
+    active = []
+    for r in requests:
+        try:
+            qty = int(r.get('quantity', 0))
+        except Exception:
+            qty = 0
+        try:
+            dt = datetime.strptime(r.get('date_needed', ''), '%Y-%m-%d').date()
+        except Exception:
+            dt = None
+        if qty > 0 and dt is not None and dt >= today:
+            active.append(r)
+    return active
 
 
 def get_campaigns():
@@ -495,3 +517,167 @@ def delete_campaign(venue, start_date):
     )
     conn.commit()
     conn.close()
+
+
+# ------------------ Blood Request Responses ------------------
+def _ensure_response_table():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS request_respond (
+            response_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            b_request_id INTEGER NOT NULL,
+            d_respond_id TEXT NOT NULL,
+            bags INTEGER NOT NULL,
+            donation_dt TEXT NOT NULL,
+            FOREIGN KEY(b_request_id) REFERENCES blood_requests(request_id)
+        )
+        """
+    )
+    conn.commit()
+    conn.close()
+
+
+def _ensure_blood_requests_responders_column():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(blood_requests)")
+    cols = [c[1] for c in cursor.fetchall()]
+    if 'responders' not in cols:
+        cursor.execute("ALTER TABLE blood_requests ADD COLUMN responders TEXT")
+        conn.commit()
+    conn.close()
+
+
+def get_blood_request_by_id(request_id):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    row = cursor.execute(
+        'SELECT request_id, request_by, name, age, blood_group, quantity, hospital_unit, hospital_name, date_needed, contact, reason FROM blood_requests WHERE request_id = ?',
+        (request_id,)
+    ).fetchone()
+    conn.close()
+    if not row:
+        return None
+    return {
+        'id': row[0],
+        'request_by': row[1],
+        'name': decrypt_data(row[2]),
+        'age': decrypt_data(row[3]),
+        'blood_group': decrypt_data(row[4]),
+        'quantity': decrypt_data(row[5]),
+        'hospital_unit': decrypt_data(row[6]),
+        'hospital_name': decrypt_data(row[7]),
+        'date_needed': decrypt_data(row[8]),
+        'contact': decrypt_data(row[9]),
+        'reason': decrypt_data(row[10]),
+    }
+
+
+def respond_to_blood_request(request_id, donor_username, bags):
+    """
+    Records a donor response and decrements remaining quantity atomically.
+    Returns tuple (ok: bool, message: str)
+    """
+    try:
+        bags = int(bags)
+    except Exception:
+        return False, 'Invalid bags value.'
+    if bags < 1 or bags > 2:
+        return False, 'You can donate at most 2 bags.'
+
+    _ensure_response_table()
+    _ensure_blood_requests_responders_column()
+
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    try:
+        cursor.execute('BEGIN IMMEDIATE')
+        row = cursor.execute('SELECT quantity FROM blood_requests WHERE request_id = ?', (request_id,)).fetchone()
+        if not row:
+            conn.rollback()
+            return False, 'Request not found.'
+
+        try:
+            current_qty = int(decrypt_data(row[0]))
+        except Exception:
+            conn.rollback()
+            return False, 'Failed to read current quantity.'
+
+        if current_qty <= 0:
+            conn.rollback()
+            return False, 'This request is already fulfilled.'
+        if bags > current_qty:
+            conn.rollback()
+            return False, 'Cannot donate more than remaining need.'
+
+        new_qty_enc = encrypt_data(str(current_qty - bags))
+        # Update responders list (CSV of usernames) in blood_requests
+        existing = cursor.execute('SELECT responders FROM blood_requests WHERE request_id = ?', (request_id,)).fetchone()
+        existing_list = []
+        if existing and existing[0]:
+            existing_list = [x.strip() for x in str(existing[0]).split(',') if x.strip()]
+        if donor_username not in existing_list:
+            existing_list.append(donor_username)
+        responders_val = ','.join(existing_list)
+        cursor.execute('UPDATE blood_requests SET quantity = ?, responders = ? WHERE request_id = ?', (new_qty_enc, responders_val, request_id))
+
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        cursor.execute(
+            'INSERT INTO request_respond (b_request_id, d_respond_id, bags, donation_dt) VALUES (?, ?, ?, ?)',
+            (request_id, donor_username, bags, now)
+        )
+        conn.commit()
+        return True, 'Response recorded.'
+    except Exception as e:
+        try:
+            conn.rollback()
+        except Exception:
+            pass
+        return False, 'Error processing response.'
+    finally:
+        conn.close()
+
+
+def get_responders_grouped():
+    """Returns a dict: request_id -> list of donor usernames (from request_respond table)."""
+    _ensure_response_table()
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    rows = cursor.execute('SELECT b_request_id, d_respond_id FROM request_respond ORDER BY response_id ASC').fetchall()
+    conn.close()
+    grouped = {}
+    for req_id, donor in rows:
+        grouped.setdefault(req_id, [])
+        if donor not in grouped[req_id]:
+            grouped[req_id].append(donor)
+    return grouped
+
+def delete_blood_request(request_id, username):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    try:
+        cursor.execute('BEGIN IMMEDIATE')
+        # Ensure the request belongs to the user
+        row = cursor.execute(
+            'SELECT request_id FROM blood_requests WHERE request_id = ? AND request_by = ?',
+            (request_id, username)
+        ).fetchone()
+        if not row:
+            conn.rollback()
+            return False
+        # Remove related responses first
+        cursor.execute('DELETE FROM request_respond WHERE b_request_id = ?', (request_id,))
+        # Delete the request
+        cursor.execute('DELETE FROM blood_requests WHERE request_id = ?', (request_id,))
+        conn.commit()
+        return True
+    except Exception:
+        try:
+            conn.rollback()
+        except Exception:
+            pass
+        return False
+    finally:
+        conn.close()

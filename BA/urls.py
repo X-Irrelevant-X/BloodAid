@@ -22,6 +22,8 @@ app.add_url_rule('/donor_list', 'donor_list', donor_list)
 app.add_url_rule('/trusted_hospitals', 'trusted_hospitals', trusted_hospitals)
 app.add_url_rule('/request_blood', 'request_blood', request_blood, methods=['GET', 'POST'])
 app.add_url_rule('/blood_requests', 'blood_requests', blood_requests)
+app.add_url_rule('/respond_request', 'respond_request', respond_request, methods=['POST'])
+app.add_url_rule('/delete_request', 'delete_request', delete_blood_request_view, methods=['POST'])
 app.add_url_rule('/campaigns', 'campaigns',view_func=campaigns_view)
 app.add_url_rule('/team', 'team', view_func=team_page)
 

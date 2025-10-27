@@ -4,3 +4,4 @@ click
 cryptography
 bcrypt
 python-dotenv
+gunicorn
